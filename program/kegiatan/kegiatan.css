@@ -1,0 +1,704 @@
+/* ============================================================
+   RESET & FONT
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #151A2D;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+    background: #1B4D3E;
+    padding: 0 24px;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-back {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+}
+
+.btn-back:hover {
+    color: #FFE600;
+}
+
+.btn-back .material-symbols-rounded {
+    font-size: 1.2rem;
+}
+
+.brand-text {
+    color: #00C2FF;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: "Fredoka", sans-serif;
+}
+
+.brand-text span {
+    color: #FFE600;
+}
+
+.navbar-spacer {
+    width: 120px;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    width: 100%;
+    flex: 1;
+}
+
+.page-header {
+    margin-bottom: 24px;
+}
+
+.page-header h1 {
+    font-family: "Fredoka", sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #fff;
+}
+
+.page-header .subtitle {
+    color: rgba(21, 26, 45, 0.6);
+    font-size: 0.95rem;
+}
+
+/* ============================================================
+   MENU UTAMA (KARTU)
+   ============================================================ */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.card-menu {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px 24px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+}
+
+.card-menu:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    border-color: #1B4D3E;
+}
+
+.card-menu .card-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.card-menu .card-icon .material-symbols-rounded {
+    font-size: 2.2rem;
+}
+
+.card-menu .icon-kegiatan-aktif {
+    background: rgba(108, 99, 255, 0.12);
+    color: #6C63FF;
+}
+
+.card-menu .icon-kegiatan-selesai {
+    background: rgba(46, 125, 50, 0.12);
+    color: #2E7D32;
+}
+
+.card-menu h3 {
+    font-family: "Fredoka", sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #151A2D;
+    margin-bottom: 8px;
+}
+
+.card-menu p {
+    color: rgba(21, 26, 45, 0.6);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: #1B4D3E;
+    color: #fff;
+}
+
+.badge-warning {
+    background: #FFB800;
+    color: #151A2D;
+}
+
+/* ============================================================
+   HIDDEN
+   ============================================================ */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+}
+
+.btn .material-symbols-rounded {
+    font-size: 1.2rem;
+}
+
+.btn-primary {
+    background: #1B4D3E;
+    color: #fff;
+}
+.btn-primary:hover {
+    background: #143d32;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: #e9ecef;
+    color: #151A2D;
+}
+.btn-secondary:hover {
+    background: #dde1e6;
+}
+
+.btn-success {
+    background: #2E7D32;
+    color: #fff;
+}
+.btn-success:hover {
+    background: #1B5E20;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: #fff;
+}
+.btn-danger:hover {
+    background: #a71d2a;
+}
+
+.btn-sm {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+}
+
+/* ============================================================
+   FORM CONTAINER
+   ============================================================ */
+.form-container {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.form-title {
+    font-family: "Fredoka", sans-serif;
+    font-weight: 700;
+    color: #151A2D;
+    border-bottom: 2px solid #1B4D3E;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 140px;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #151A2D;
+    margin-bottom: 4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 10px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: "Poppins", sans-serif;
+    transition: border-color 0.3s ease;
+    background: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1B4D3E;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* ============================================================
+   SECTION
+   ============================================================ */
+.section-container {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+}
+
+.section-title {
+    font-weight: 600;
+    color: #1B4D3E;
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+
+/* ============================================================
+   STATISTIK
+   ============================================================ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid #1B4D3E;
+}
+
+.stat-card .stat-icon {
+    font-size: 1.8rem;
+}
+
+.stat-card .stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: "Fredoka", sans-serif;
+    color: #151A2D;
+}
+
+.stat-card .stat-label {
+    font-size: 0.8rem;
+    color: rgba(21, 26, 45, 0.5);
+}
+
+.stat-card.stat-success {
+    border-left-color: #2E7D32;
+}
+.stat-card.stat-warning {
+    border-left-color: #FFB800;
+}
+.stat-card.stat-info {
+    border-left-color: #6C63FF;
+}
+
+/* ============================================================
+   KEGIATAN MENDATANG
+   ============================================================ */
+.upcoming-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.upcoming-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #6C63FF;
+}
+
+.upcoming-item .upcoming-name {
+    font-weight: 600;
+    color: #151A2D;
+}
+
+.upcoming-item .upcoming-date {
+    font-size: 0.85rem;
+    color: rgba(21, 26, 45, 0.5);
+}
+
+.upcoming-item .upcoming-badge {
+    font-size: 0.7rem;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: #6C63FF;
+    color: #fff;
+}
+
+/* ============================================================
+   FILTER
+   ============================================================ */
+.filter-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-group {
+    min-width: 120px;
+    flex: 0 1 auto;
+}
+
+.filter-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(21, 26, 45, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.filter-group select {
+    padding: 6px 10px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-family: "Poppins", sans-serif;
+    background: #fff;
+    transition: border-color 0.3s ease;
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: #1B4D3E;
+}
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.table-container {
+    overflow-x: auto;
+    margin-top: 12px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.table thead {
+    background: #1B4D3E;
+    color: #fff;
+}
+
+.table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-end {
+    text-align: right;
+}
+
+.text-muted {
+    color: #999;
+}
+
+/* Status Badges */
+.status-rencana {
+    background: #cce5ff;
+    color: #004085;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-berlangsung {
+    background: #fff3cd;
+    color: #856404;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-selesai {
+    background: #d4edda;
+    color: #155724;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-dibatalkan {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.btn-hapus {
+    background: transparent;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.btn-hapus:hover {
+    color: #a71d2a;
+}
+
+.btn-ubah-status {
+    background: transparent;
+    border: none;
+    color: #1B4D3E;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.btn-ubah-status:hover {
+    color: #00C2FF;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+#toastContainer {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+}
+
+#toastMessage {
+    background: #151A2D;
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    border-left: 4px solid #00C2FF;
+    max-width: 400px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#toastMessage.show {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 992px) {
+    .card-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+    .btn-back span {
+        display: none;
+    }
+    .navbar-spacer {
+        width: 0;
+    }
+    .main-content {
+        padding: 16px;
+    }
+    .form-container {
+        padding: 16px;
+    }
+    .form-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .form-group {
+        min-width: 100%;
+    }
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    .filter-row {
+        flex-direction: column;
+    }
+    .filter-group {
+        min-width: 100%;
+    }
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    .table th,
+    .table td {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+    .upcoming-item {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    #toastContainer {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+    }
+    #toastMessage {
+        max-width: 100%;
+        font-size: 0.85rem;
+        padding: 12px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0 12px;
+        height: 56px;
+    }
+    .brand-text {
+        font-size: 1rem;
+    }
+    .main-content {
+        padding: 12px;
+    }
+    .form-container {
+        padding: 12px;
+    }
+    .card-menu {
+        padding: 20px 16px;
+    }
+    .card-menu h3 {
+        font-size: 1rem;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .stat-card {
+        padding: 12px 14px;
+    }
+    .stat-card .stat-number {
+        font-size: 1.2rem;
+    }
+    .table th,
+    .table td {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+    .btn {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+}

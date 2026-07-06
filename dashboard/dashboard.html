@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MahaMate - Dashboard</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+    <!-- ============================================================ -->
+    <!-- NAVBAR -->
+    <!-- ============================================================ -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-left">
+                <a href="#" class="navbar-brand">
+                    <img src="assets/logo.png" alt="MahaMate" width="36" height="36" class="rounded-circle" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22%3E%3Crect width=%2236%22 height=%2236%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2218%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                    <span class="brand-text">Maha<span>Mate</span></span>
+                </a>
+            </div>
+            
+            <div class="navbar-right">
+                <button class="btn-theme" id="themeToggle" title="Toggle Theme">
+                    <span class="material-symbols-rounded" id="themeIcon">dark_mode</span>
+                </button>
+                <button class="btn-login" id="btnLoginIcon" title="Login">
+                    <span class="material-symbols-rounded" id="loginIcon">account_circle</span>
+                </button>
+                <button class="btn-menu" id="menuToggle">
+                    <span class="material-symbols-rounded">menu</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- SIDEBAR -->
+    <!-- ============================================================ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-brand">
+                    <img src="assets/logo.png" alt="MahaMate" width="40" height="40" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2220%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                    <span class="sidebar-brand-text">Maha<span>Mate</span></span>
+                </a>
+                <button class="sidebar-close" id="sidebarClose">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="sidebar-menu">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link active" data-page="dashboard">
+                            <span class="material-symbols-rounded">dashboard</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item dropdown-container" id="programMenu">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <span class="material-symbols-rounded">apps</span>
+                            <span>Program</span>
+                            <span class="material-symbols-rounded dropdown-icon">keyboard_arrow_down</span>
+                            <span class="badge-lock" id="loginBadge">🔒</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../program/keuangann/keuangan.html" class="dropdown-link"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
+                            <li><a href="../program/tugas/tugas.html" class="dropdown-link"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
+                            <li><a href="../program/kegiatan/kegiatan.html" class="dropdown-link"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="sidebar-item dropdown-container">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <span class="material-symbols-rounded">contacts</span>
+                            <span>Kontak</span>
+                            <span class="material-symbols-rounded dropdown-icon">keyboard_arrow_down</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://github.com" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">code</span> Github</a></li>
+                            <li><a href="mailto:email@example.com" class="dropdown-link"><span class="material-symbols-rounded">email</span> Email</a></li>
+                            <li><a href="https://instagram.com" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">photo_camera</span> Instagram</a></li>
+                            <li><a href="https://linkedin.com" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">work</span> Linkedin</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <ul class="sidebar-menu sidebar-menu-bottom">
+                    <li class="sidebar-item" id="profileItem">
+                        <a href="#" class="sidebar-link" id="profileLink">
+                            <span class="material-symbols-rounded">account_circle</span>
+                            <span id="profileText">Profile</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item" id="logoutItem">
+                        <a href="#" class="sidebar-link" id="btnLogout">
+                            <span class="material-symbols-rounded">logout</span>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ============================================================ -->
+    <!-- LOGIN POPUP -->
+    <!-- ============================================================ -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-popup">
+            <button class="login-close" id="loginClose">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+            <h3 class="login-title">🔐 User Login</h3>
+            <p class="login-subtitle">Masuk ke akun MahaMate Anda</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="loginUsername" placeholder="Masukkan username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Masukkan password" required>
+                </div>
+                
+                <div class="alert alert-danger hidden" id="loginError">
+                    <span class="material-symbols-rounded">error</span>
+                    <span id="loginErrorText">Username atau password salah!</span>
+                </div>
+                
+                <div class="login-options">
+                    <a href="#" class="forgot-link" id="forgotPassword">Lupa Password?</a>
+                    <span class="register-link">
+                        Belum punya akun? <a href="#" id="registerLink">Daftar</a>
+                    </span>
+                </div>
+                
+                <button type="submit" class="btn btn-login" id="btnLoginSubmit">
+                    <span class="material-symbols-rounded">login</span> Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================================================ -->
+    <main class="main-content">
+        <section class="dashboard-section">
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <div class="datetime-display">
+                        <span class="day-name" id="dayName">Rabu</span>
+                        <span class="time-display" id="timeDisplay">12.00</span>
+                        <span class="date-display" id="dateDisplay">01 July 2026</span>
+                    </div>
+                </div>
+
+                <div class="welcome-section">
+                    <h1>SELAMAT DATANG DI <span class="highlight-maha">Maha</span><span class="highlight-mate">Mate</span></h1>
+                    <p class="slogan" id="welcomeSlogan">
+                        Membantu Kamu <span>memanage</span> Keuangan, Tugas, Dan Kegiatan
+                    </p>
+                    <div id="userGreeting" class="user-greeting hidden">
+                        <span class="greeting-badge">
+                            <span class="material-symbols-rounded">check_circle</span>
+                            Selamat datang, <strong id="greetingName">User</strong>!
+                        </span>
+                    </div>
+                </div>
+
+                <div class="program-grid">
+                    <div class="program-card" data-page="keuangan" id="cardKeuangan">
+                        <div class="card-icon icon-keuangan">
+                            <span class="material-symbols-rounded">payments</span>
+                        </div>
+                        <h3>Manajemen Keuangan</h3>
+                        <p>Atur keuangan Anda dengan sistem yang transparan dan akurat</p>
+                        <a href="../program/keuangann/keuangan.html" class="card-btn">Lihat Detail →</a>
+                        <div class="program-lock">🔒 Login Required</div>
+                    </div>
+
+                    <div class="program-card" data-page="tugas" id="cardTugas">
+                        <div class="card-icon icon-tugas">
+                            <span class="material-symbols-rounded">assignment</span>
+                        </div>
+                        <h3>Manajemen Tugas</h3>
+                        <p>Kelola tugas Anda dengan mudah, terstruktur, dan efisien</p>
+                        <a href="../program/tugas/tugas.html" class="card-btn">Lihat Detail →</a>
+                        <div class="program-lock">🔒 Login Required</div>
+                    </div>
+
+                    <div class="program-card" data-page="kegiatan" id="cardKegiatan">
+                        <div class="card-icon icon-kegiatan">
+                            <span class="material-symbols-rounded">event_note</span>
+                        </div>
+                        <h3>Manajemen Kegiatan</h3>
+                        <p>Rencanakan & pantau kegiatan Anda secara real-time</p>
+                        <a href="../program/kegiatan/kegiatan.html" class="card-btn">Lihat Detail →</a>
+                        <div class="program-lock">🔒 Login Required</div>
+                    </div>
+                </div>
+
+                <div class="guest-message" id="guestMessage">
+                    <p>
+                        <span class="material-symbols-rounded">info</span>
+                        Silakan <a href="#" id="guestLoginLink" class="guest-login-link">Login</a> untuk mengakses semua program
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer-section">
+            <div class="footer-grid">
+                <div class="footer-col footer-about">
+                    <h3><span class="maha">Maha</span><span class="mate">Mate</span></h3>
+                    <p>Membantu kamu memanage Keuangan, Tugas, dan Kegiatan</p>
+                    <div class="footer-divider"></div>
+                    <p class="footer-tagline">Tempat terbaik untuk mengelola tim dan proyek</p>
+                </div>
+                
+                <div class="footer-col footer-program">
+                    <h4>📋 Program</h4>
+                    <ul class="footer-links">
+                        <li><a href="../program/keuangann/keuangan.html"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
+                        <li><a href="../program/tugas/tugas.html"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
+                        <li><a href="../program/kegiatan/kegiatan.html"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col footer-kontak">
+                    <h4>📱 Kontak</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://github.com" target="_blank"><span class="material-symbols-rounded">code</span> Github</a></li>
+                        <li><a href="mailto:email@example.com"><span class="material-symbols-rounded">email</span> Email</a></li>
+                        <li><a href="https://instagram.com" target="_blank"><span class="material-symbols-rounded">photo_camera</span> Instagram</a></li>
+                        <li><a href="https://linkedin.com" target="_blank"><span class="material-symbols-rounded">work</span> Linkedin</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2026 MahaMate. Dibangun dengan 💙 oleh Tim MahaMate</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toastContainer">
+        <div id="toastMessage">Notifikasi</div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

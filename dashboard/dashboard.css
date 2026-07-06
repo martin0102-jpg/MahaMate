@@ -1,0 +1,1037 @@
+/* ============================================================
+   RESET & FONT
+   ============================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f0f2f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #151A2D;
+    transition: background 0.3s ease;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #f0f2f5;
+}
+::-webkit-scrollbar-thumb {
+    background: #1B4D3E;
+    border-radius: 3px;
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+    background: #1B4D3E;
+    padding: 0 24px;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+}
+
+.navbar-container {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.navbar-brand img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.brand-text {
+    color: #00C2FF;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: "Fredoka", sans-serif;
+}
+
+.brand-text span {
+    color: #FFE600;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar-right button {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.navbar-right button:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+
+.navbar-right button .material-symbols-rounded {
+    font-size: 1.5rem;
+}
+
+.btn-login.logged-in .material-symbols-rounded {
+    color: #FFE600;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: #151A2D;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 200;
+    overflow-y: auto;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+}
+
+.sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px 12px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 16px;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.sidebar-brand img {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sidebar-brand-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: "Fredoka", sans-serif;
+    color: #00C2FF;
+}
+
+.sidebar-brand-text span {
+    color: #FFE600;
+}
+
+.sidebar-close {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-close:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+.sidebar-close .material-symbols-rounded {
+    font-size: 1.3rem;
+}
+
+/* Sidebar Navigation */
+.sidebar-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu-bottom {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 12px;
+}
+
+.sidebar-item {
+    margin-bottom: 2px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.sidebar-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+}
+
+.sidebar-link.active {
+    color: #fff;
+    background: rgba(0,194,255,0.15);
+}
+
+.sidebar-link .material-symbols-rounded {
+    font-size: 1.3rem;
+}
+
+.sidebar-link .dropdown-icon {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.sidebar-item.open .dropdown-icon {
+    transform: rotate(180deg);
+}
+
+.sidebar-link .badge-lock {
+    font-size: 0.7rem;
+    margin-left: 4px;
+    opacity: 0.6;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-left: 36px;
+}
+
+.sidebar-item.open .dropdown-menu {
+    max-height: 300px;
+}
+
+.dropdown-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    transition: all 0.3s ease;
+}
+
+.dropdown-link:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+}
+
+.dropdown-link .material-symbols-rounded {
+    font-size: 1.1rem;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 150;
+    display: none;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ============================================================
+   LOGIN POPUP
+   ============================================================ */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 300;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-overlay.active {
+    display: flex;
+}
+
+.login-popup {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: loginFadeIn 0.3s ease;
+    position: relative;
+}
+
+@keyframes loginFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.login-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    transition: all 0.3s ease;
+    padding: 4px;
+}
+
+.login-close:hover {
+    color: #333;
+    transform: rotate(90deg);
+}
+
+.login-close .material-symbols-rounded {
+    font-size: 1.5rem;
+}
+
+.login-title {
+    font-family: "Fredoka", sans-serif;
+    font-weight: 700;
+    color: #151A2D;
+    margin-bottom: 4px;
+}
+
+.login-subtitle {
+    color: rgba(21, 26, 45, 0.5);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+}
+
+.login-popup .form-group {
+    margin-bottom: 16px;
+}
+
+.login-popup .form-group label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #151A2D;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.login-popup .form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-family: "Poppins", sans-serif;
+    transition: border-color 0.3s ease;
+    background: #fff;
+}
+
+.login-popup .form-group input:focus {
+    outline: none;
+    border-color: #1B4D3E;
+}
+
+.login-popup .alert {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.login-popup .alert-danger {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.login-popup .alert .material-symbols-rounded {
+    font-size: 1.2rem;
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.forgot-link {
+    color: #1B4D3E;
+    text-decoration: none;
+}
+
+.forgot-link:hover {
+    text-decoration: underline;
+}
+
+.register-link {
+    color: rgba(21, 26, 45, 0.6);
+}
+
+.register-link a {
+    color: #1B4D3E;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Poppins", sans-serif;
+    width: 100%;
+}
+
+.btn .material-symbols-rounded {
+    font-size: 1.2rem;
+}
+
+.btn-login {
+    background: #1B4D3E;
+    color: #fff;
+}
+
+.btn-login:hover {
+    background: #143d32;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(27, 77, 62, 0.3);
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    width: 100%;
+    flex: 1;
+}
+
+/* ============================================================
+   DASHBOARD SECTION
+   ============================================================ */
+.dashboard-section {
+    background: #151A2D;
+    border-radius: 16px;
+    padding: 32px 40px;
+    box-shadow: 0 4px 20px rgba(21, 26, 45, 0.2);
+}
+
+.dashboard-header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.datetime-display {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.datetime-display .day-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #00C2FF;
+    font-family: "Fredoka", sans-serif;
+}
+
+.datetime-display .time-display {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #FFE600;
+    font-family: "Fredoka", sans-serif;
+}
+
+.datetime-display .date-display {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+    background: rgba(255,255,255,0.08);
+    padding: 2px 16px;
+    border-radius: 20px;
+}
+
+.welcome-section h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    font-family: "Fredoka", sans-serif;
+    margin-bottom: 4px;
+}
+
+.welcome-section h1 .highlight-maha {
+    color: #00C2FF;
+}
+.welcome-section h1 .highlight-mate {
+    color: #FFE600;
+}
+
+.welcome-section .slogan {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.welcome-section .slogan span {
+    color: #FFFFFF;
+    font-weight: 600;
+}
+
+.user-greeting {
+    margin-top: 8px;
+}
+
+.greeting-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.08);
+    padding: 6px 16px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.greeting-badge .material-symbols-rounded {
+    color: #4CAF50;
+    font-size: 1.2rem;
+}
+
+/* ============================================================
+   PROGRAM GRID
+   ============================================================ */
+.program-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 24px;
+}
+
+.program-card {
+    background: rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.program-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(255,255,255,0.15);
+}
+
+.program-card .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px auto;
+}
+
+.program-card .card-icon .material-symbols-rounded {
+    font-size: 1.8rem;
+}
+
+.program-card .icon-keuangan {
+    background: rgba(0,194,255,0.15);
+    color: #00C2FF;
+}
+
+.program-card .icon-tugas {
+    background: rgba(255,184,0,0.15);
+    color: #FFB800;
+}
+
+.program-card .icon-kegiatan {
+    background: rgba(255,107,107,0.15);
+    color: #FF6B6B;
+}
+
+.program-card h3 {
+    font-family: "Fredoka", sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.program-card p {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.program-card .card-btn {
+    color: #00C2FF;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.program-card .card-btn:hover {
+    color: #FFE600;
+}
+
+.program-card .program-lock {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.3);
+    margin-top: 8px;
+}
+
+.guest-message {
+    text-align: center;
+    margin-top: 16px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.9rem;
+}
+
+.guest-message .material-symbols-rounded {
+    font-size: 1rem;
+    vertical-align: middle;
+}
+
+.guest-login-link {
+    color: #00C2FF;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.guest-login-link:hover {
+    text-decoration: underline;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer-section {
+    background: #1B4D3E;
+    padding: 32px 40px 24px 40px;
+    border-radius: 16px;
+    margin-top: 24px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+}
+
+.footer-about h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: "Fredoka", sans-serif;
+    color: #FFFFFF;
+}
+.footer-about h3 .maha { color: #00C2FF; }
+.footer-about h3 .mate { color: #FFE600; }
+
+.footer-about p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.footer-about .footer-divider {
+    width: 50px;
+    height: 3px;
+    background: #A5D6A7;
+    border-radius: 2px;
+    margin: 10px 0 14px 0;
+}
+
+.footer-about .footer-tagline {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.4);
+}
+
+.footer-col h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    font-family: "Fredoka", sans-serif;
+    margin-bottom: 14px;
+}
+
+.footer-col .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col .footer-links li {
+    margin-bottom: 6px;
+}
+
+.footer-col .footer-links li a {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-col .footer-links li a .material-symbols-rounded {
+    font-size: 1rem;
+}
+
+.footer-col .footer-links li a:hover {
+    color: #A5D6A7;
+    transform: translateX(4px);
+}
+
+.footer-bottom {
+    padding-top: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+    margin-top: 24px;
+}
+.footer-bottom p {
+    color: rgba(255,255,255,0.35);
+    font-size: 0.82rem;
+}
+
+/* ============================================================
+   TOAST NOTIFICATION
+   ============================================================ */
+#toastContainer {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 9999;
+}
+
+#toastMessage {
+    background: #151A2D;
+    color: #fff;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    border-left: 4px solid #00C2FF;
+    max-width: 400px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#toastMessage.show {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+body.dark-mode {
+    background: #0a0a1a;
+}
+
+body.dark-mode .dashboard-section {
+    background: #0d1117;
+}
+
+body.dark-mode .navbar {
+    background: #0d2818;
+}
+
+body.dark-mode .footer-section {
+    background: #0d2818;
+}
+
+body.dark-mode .sidebar {
+    background: #0d1117;
+}
+
+body.dark-mode .sidebar-link.active {
+    background: rgba(0,194,255,0.15);
+}
+
+body.dark-mode .login-popup {
+    background: #1c2333;
+    color: #fff;
+}
+
+body.dark-mode .login-popup .form-group input {
+    background: #2d3545;
+    border-color: #404a5a;
+    color: #fff;
+}
+
+body.dark-mode .login-popup .form-group input:focus {
+    border-color: #00C2FF;
+}
+
+body.dark-mode .login-title {
+    color: #fff;
+}
+
+body.dark-mode .login-subtitle {
+    color: rgba(255,255,255,0.5);
+}
+
+body.dark-mode .register-link {
+    color: rgba(255,255,255,0.6);
+}
+
+/* ============================================================
+   HIDDEN UTILITY
+   ============================================================ */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 992px) {
+    .program-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    .footer-about {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+    }
+    .main-content {
+        padding: 16px;
+    }
+    .dashboard-section {
+        padding: 24px;
+        border-radius: 12px;
+    }
+    .welcome-section h1 {
+        font-size: 1.8rem;
+    }
+    .program-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    .footer-section {
+        padding: 24px;
+        border-radius: 12px;
+    }
+    .datetime-display .day-name {
+        font-size: 1.1rem;
+    }
+    .datetime-display .time-display {
+        font-size: 1.4rem;
+    }
+    .datetime-display .date-display {
+        font-size: 0.8rem;
+        padding: 2px 12px;
+    }
+    .login-popup {
+        padding: 24px;
+        margin: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        padding: 0 12px;
+        height: 56px;
+    }
+    .brand-text {
+        font-size: 1rem;
+    }
+    .navbar-brand img {
+        width: 28px;
+        height: 28px;
+    }
+    .main-content {
+        padding: 12px;
+    }
+    .dashboard-section {
+        padding: 16px;
+        border-radius: 10px;
+    }
+    .program-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .footer-section {
+        padding: 16px;
+        border-radius: 10px;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 20px;
+    }
+    .footer-about .footer-divider {
+        margin: 10px auto 14px auto;
+    }
+    .footer-col .footer-links li a {
+        justify-content: center;
+    }
+    .welcome-section h1 {
+        font-size: 1.4rem;
+    }
+    .welcome-section .slogan {
+        font-size: 0.9rem;
+    }
+    .datetime-display {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    .datetime-display .day-name {
+        font-size: 0.95rem;
+        width: 100%;
+    }
+    .datetime-display .time-display {
+        font-size: 1.2rem;
+    }
+    .datetime-display .date-display {
+        font-size: 0.75rem;
+        padding: 2px 10px;
+    }
+    .sidebar {
+        width: 280px;
+    }
+    #toastContainer {
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
+    }
+    #toastMessage {
+        max-width: 100%;
+        font-size: 0.85rem;
+        padding: 12px 16px;
+    }
+    .login-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MahaMate - Manajemen Kegiatan</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <link rel="stylesheet" href="kegiatan.css">
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../../dashboard/dashboard.html" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span>
+                Kembali ke Dashboard
+            </a>
+            <span class="brand-text">Maha<span>Mate</span></span>
+            <div class="navbar-spacer"></div>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1>📅 Manajemen Kegiatan</h1>
+            <p class="subtitle">Rencanakan dan pantau semua kegiatan Anda</p>
+        </div>
+
+        <!-- ===== MENU UTAMA ===== -->
+        <div id="menuUtama">
+            <div class="card-grid">
+                <!-- Kartu 1: Kegiatan Aktif -->
+                <div class="card-menu" id="btnMode1">
+                    <div class="card-icon icon-kegiatan-aktif">
+                        <span class="material-symbols-rounded">event_available</span>
+                    </div>
+                    <h3>📅 Kegiatan Aktif</h3>
+                    <p>Menampilkan semua kegiatan yang sedang berlangsung.</p>
+                    <span class="badge badge-success">Mulai</span>
+                </div>
+                
+                <!-- Kartu 2: Kegiatan Selesai -->
+                <div class="card-menu" id="btnMode2">
+                    <div class="card-icon icon-kegiatan-selesai">
+                        <span class="material-symbols-rounded">check_circle</span>
+                    </div>
+                    <h3>✅ Kegiatan Selesai</h3>
+                    <p>Menampilkan kegiatan yang sudah selesai.</p>
+                    <span class="badge badge-warning">Mulai</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FORM KERJA ===== -->
+        <div id="formKerja" class="hidden">
+            <button class="btn btn-secondary" id="btnKembaliMenu">
+                <span class="material-symbols-rounded">arrow_back</span>
+                Kembali ke Menu Kegiatan
+            </button>
+            
+            <div class="form-container">
+                <h4 class="form-title" id="formTitle">📅 Mode: Kegiatan Aktif</h4>
+                
+                <!-- ===== STATISTIK ===== -->
+                <div class="stats-grid" id="statsContainer">
+                    <div class="stat-card">
+                        <span class="stat-icon">📊</span>
+                        <div>
+                            <div class="stat-number" id="statTotal">0</div>
+                            <div class="stat-label">Total Kegiatan</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-success">
+                        <span class="stat-icon">✅</span>
+                        <div>
+                            <div class="stat-number" id="statSelesai">0</div>
+                            <div class="stat-label">Selesai</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-warning">
+                        <span class="stat-icon">⏳</span>
+                        <div>
+                            <div class="stat-number" id="statBerlangsung">0</div>
+                            <div class="stat-label">Berlangsung</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-info">
+                        <span class="stat-icon">📋</span>
+                        <div>
+                            <div class="stat-number" id="statRencana">0</div>
+                            <div class="stat-label">Direncanakan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== KEGIATAN MENDATANG ===== -->
+                <div class="section-container" id="upcomingContainer">
+                    <h5 class="section-title">📅 Kegiatan Mendatang</h5>
+                    <div id="upcomingList" class="upcoming-list">
+                        <p class="text-muted">Tidak ada kegiatan mendatang</p>
+                    </div>
+                </div>
+
+                <!-- ===== INPUT KEGIATAN BARU ===== -->
+                <div class="section-container">
+                    <h5 class="section-title">✏️ Tambah Kegiatan Baru</h5>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nama Kegiatan</label>
+                            <input type="text" id="inputNama" placeholder="Masukkan nama kegiatan">
+                        </div>
+                        <div class="form-group">
+                            <label>Lokasi/Tempat</label>
+                            <input type="text" id="inputLokasi" placeholder="Masukkan lokasi">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tanggal Mulai</label>
+                            <input type="date" id="inputMulai">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Selesai</label>
+                            <input type="date" id="inputSelesai">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <textarea id="inputDeskripsi" rows="2" placeholder="Deskripsi kegiatan..."></textarea>
+                    </div>
+                    <button class="btn btn-success" id="btnTambahKegiatan">
+                        <span class="material-symbols-rounded">add_circle</span>
+                        Tambah Kegiatan
+                    </button>
+                </div>
+
+                <!-- ===== FILTER ===== -->
+                <div class="section-container">
+                    <h5 class="section-title">🔍 Filter</h5>
+                    <div class="filter-row">
+                        <div class="form-group filter-group">
+                            <label>Status</label>
+                            <select id="filterStatus">
+                                <option value="semua">Semua</option>
+                                <option value="Rencana">Rencana</option>
+                                <option value="Berlangsung">Berlangsung</option>
+                                <option value="Selesai">Selesai</option>
+                                <option value="Dibatalkan">Dibatalkan</option>
+                            </select>
+                        </div>
+                        <div class="form-group filter-group">
+                            <label>Lokasi</label>
+                            <select id="filterLokasi">
+                                <option value="semua">Semua</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== DAFTAR KEGIATAN ===== -->
+                <div class="section-container">
+                    <h5 class="section-title">📋 Daftar Kegiatan</h5>
+                    <div class="table-container">
+                        <table class="table" id="tabelKegiatan">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;">No</th>
+                                    <th>Nama Kegiatan</th>
+                                    <th>Lokasi</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Tanggal Selesai</th>
+                                    <th>Status</th>
+                                    <th style="width: 100px;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelBody">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">Belum ada kegiatan</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST -->
+    <div id="toastContainer">
+        <div id="toastMessage">Notifikasi</div>
+    </div>
+
+    <script src="kegiatan.js"></script>
+</body>
+</html>

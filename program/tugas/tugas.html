@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MahaMate - Manajemen Tugas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
+    <link rel="stylesheet" href="tugas.css">
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="../../dashboard/dashboard.html" class="btn-back">
+                <span class="material-symbols-rounded">arrow_back</span>
+                Kembali ke Dashboard
+            </a>
+            <span class="brand-text">Maha<span>Mate</span></span>
+            <div class="navbar-spacer"></div>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main-content">
+        <div class="page-header">
+            <h1>📋 Manajemen Tugas</h1>
+            <p class="subtitle">Kelola dan pantau semua tugas Anda dengan mudah</p>
+        </div>
+
+        <!-- ===== MENU UTAMA ===== -->
+        <div id="menuUtama">
+            <div class="card-grid">
+                <!-- Kartu 1: Daftar Tugas Aktif -->
+                <div class="card-menu" id="btnMode1">
+                    <div class="card-icon icon-tugas-aktif">
+                        <span class="material-symbols-rounded">list_alt</span>
+                    </div>
+                    <h3>📋 Daftar Tugas Aktif</h3>
+                    <p>Menampilkan semua tugas yang sedang berjalan dan perlu diselesaikan.</p>
+                    <span class="badge badge-success">Mulai</span>
+                </div>
+                
+                <!-- Kartu 2: Tugas Selesai -->
+                <div class="card-menu" id="btnMode2">
+                    <div class="card-icon icon-tugas-selesai">
+                        <span class="material-symbols-rounded">check_circle</span>
+                    </div>
+                    <h3>✅ Tugas Selesai</h3>
+                    <p>Menampilkan tugas yang sudah selesai dan riwayat pencapaian.</p>
+                    <span class="badge badge-warning">Mulai</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FORM KERJA ===== -->
+        <div id="formKerja" class="hidden">
+            <button class="btn btn-secondary" id="btnKembaliMenu">
+                <span class="material-symbols-rounded">arrow_back</span>
+                Kembali ke Menu Tugas
+            </button>
+            
+            <div class="form-container">
+                <h4 class="form-title" id="formTitle">📋 Mode: Daftar Tugas Aktif</h4>
+                
+                <!-- ===== STATISTIK ===== -->
+                <div class="stats-grid" id="statsContainer">
+                    <div class="stat-card">
+                        <span class="stat-icon">📊</span>
+                        <div>
+                            <div class="stat-number" id="statTotal">0</div>
+                            <div class="stat-label">Total Tugas</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-success">
+                        <span class="stat-icon">✅</span>
+                        <div>
+                            <div class="stat-number" id="statSelesai">0</div>
+                            <div class="stat-label">Selesai</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-warning">
+                        <span class="stat-icon">⏳</span>
+                        <div>
+                            <div class="stat-number" id="statAktif">0</div>
+                            <div class="stat-label">Aktif</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-danger">
+                        <span class="stat-icon">⚠️</span>
+                        <div>
+                            <div class="stat-number" id="statTerlambat">0</div>
+                            <div class="stat-label">Terlambat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== INPUT TUGAS BARU ===== -->
+                <div class="section-container">
+                    <h5 class="section-title">✏️ Tambah Tugas Baru</h5>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Judul Tugas</label>
+                            <input type="text" id="inputJudul" placeholder="Masukkan judul tugas">
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori</label>
+                            <select id="inputKategori">
+                                <option value="Pribadi">Pribadi</option>
+                                <option value="Pekerjaan">Pekerjaan</option>
+                                <option value="Belajar">Belajar</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Prioritas</label>
+                            <select id="inputPrioritas">
+                                <option value="Rendah">🟢 Rendah</option>
+                                <option value="Sedang" selected>🟡 Sedang</option>
+                                <option value="Tinggi">🔴 Tinggi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Deadline</label>
+                            <input type="date" id="inputDeadline">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi</label>
+                        <textarea id="inputDeskripsi" rows="2" placeholder="Deskripsi tugas..."></textarea>
+                    </div>
+                    <button class="btn btn-success" id="btnTambahTugas">
+                        <span class="material-symbols-rounded">add_circle</span>
+                        Tambah Tugas
+                    </button>
+                </div>
+
+                <!-- ===== FILTER & SORTING ===== -->
+                <div class="section-container">
+                    <h5 class="section-title">🔍 Filter & Urutkan</h5>
+                    <div class="filter-row">
+                        <div class="form-group filter-group">
+                            <label>Kategori</label>
+                            <select id="filterKategori">
+                                <option value="semua">Semua</option>
+                                <option value="Pribadi">Pribadi</option>
+                                <option value="Pekerjaan">Pekerjaan</option>
+                                <option value="Belajar">Belajar</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
+                        </div>
+                        <div class="form-group filter-group">
+                            <label>Prioritas</label>
+                            <select id="filterPrioritas">
+                                <option value="semua">Semua</option>
+                                <option value="Rendah">Rendah</option>
+                                <option value="Sedang">Sedang</option>
+                                <option value="Tinggi">Tinggi</option>
+                            </select>
+                        </div>
+                        <div class="form-group filter-group">
+                            <label>Status</label>
+                            <select id="filterStatus">
+                                <option value="semua">Semua</option>
+                                <option value="Belum Mulai">Belum Mulai</option>
+                                <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
+                        <div class="form-group filter-group">
+                            <label>Urutkan</label>
+                            <select id="sortBy">
+                                <option value="deadline">Deadline Terdekat</option>
+                                <option value="createdAt">Terbaru</option>
+                                <option value="judul">Judul A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== DAFTAR TUGAS ===== -->
+                <div class="section-container">
+                    <h5 class="section-title">📋 Daftar Tugas</h5>
+                    <div class="table-container">
+                        <table class="table" id="tabelTugas">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;">No</th>
+                                    <th>Judul</th>
+                                    <th>Kategori</th>
+                                    <th>Prioritas</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th style="width: 120px;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabelBody">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">Belum ada tugas</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST -->
+    <div id="toastContainer">
+        <div id="toastMessage">Notifikasi</div>
+    </div>
+
+    <script src="tugas.js"></script>
+</body>
+</html>
