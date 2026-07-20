@@ -248,8 +248,7 @@ function updateUIForLogin() {
     var loginIcon = document.getElementById('loginIcon');
     var btnLogin = document.getElementById('btnLoginIcon');
     var profileText = document.getElementById('profileText');
-    var greetingName = document.getElementById('greetingName');
-    var userGreeting = document.getElementById('userGreeting');
+    var welcomeTitle = document.getElementById('welcomeTitle');
     var welcomeSlogan = document.getElementById('welcomeSlogan');
     var loginBadge = document.getElementById('loginBadge');
     
@@ -257,19 +256,28 @@ function updateUIForLogin() {
     var programLock = document.querySelectorAll('.program-lock');
     var guestMessage = document.getElementById('guestMessage');
     var programMenu = document.getElementById('programMenu');
+    var cardBtns = document.querySelectorAll('.card-btn');
     
     if (session) {
-        // Logged In
+        // ===== LOGGED IN =====
         btnLogin.classList.add('logged-in');
         loginIcon.textContent = 'account_circle';
         btnLogin.title = session.name + ' (Klik untuk logout)';
         
         profileText.textContent = session.name;
         
-        greetingName.textContent = session.name;
-        userGreeting.classList.remove('hidden');
-        welcomeSlogan.innerHTML = 'Selamat datang kembali, <strong>' + session.name + '</strong>! 🎉';
+        // Update welcome title with username
+        if (welcomeTitle) {
+            welcomeTitle.innerHTML = 
+                'SELAMAT DATANG DI <span class="highlight-maha">Maha</span><span class="highlight-mate">Mate</span>, <span style="color:#FFE600;">' + session.name + '</span>';
+        }
         
+        // Update slogan (tetap)
+        if (welcomeSlogan) {
+            welcomeSlogan.innerHTML = 'Membantu Kamu <span>memanage</span> Keuangan, Tugas, Dan Kegiatan';
+        }
+        
+        // Hilangkan lock
         programLock.forEach(function(el) {
             el.classList.add('hidden');
         });
@@ -287,18 +295,31 @@ function updateUIForLogin() {
             card.style.opacity = '1';
         });
         
+        // Enable card buttons
+        cardBtns.forEach(function(btn) {
+            btn.style.pointerEvents = 'auto';
+        });
+        
         showToast('Selamat datang, ' + session.name + '! 👋');
         
     } else {
-        // Not Logged In
+        // ===== NOT LOGGED IN =====
         btnLogin.classList.remove('logged-in');
         loginIcon.textContent = 'account_circle';
         btnLogin.title = 'Login';
         
         profileText.textContent = 'Profile';
         
-        userGreeting.classList.add('hidden');
-        welcomeSlogan.innerHTML = 'Membantu Kamu <span>memanage</span> Keuangan, Tugas, Dan Kegiatan';
+        // Reset welcome title
+        if (welcomeTitle) {
+            welcomeTitle.innerHTML = 
+                'SELAMAT DATANG DI <span class="highlight-maha">Maha</span><span class="highlight-mate">Mate</span>';
+        }
+        
+        // Reset slogan
+        if (welcomeSlogan) {
+            welcomeSlogan.innerHTML = 'Membantu Kamu <span>memanage</span> Keuangan, Tugas, Dan Kegiatan';
+        }
         
         programLock.forEach(function(el) {
             el.classList.remove('hidden');
@@ -315,6 +336,11 @@ function updateUIForLogin() {
         programCards.forEach(function(card) {
             card.style.cursor = 'default';
             card.style.opacity = '0.7';
+        });
+        
+        // Disable card buttons
+        cardBtns.forEach(function(btn) {
+            btn.style.pointerEvents = 'none';
         });
     }
 }
@@ -345,9 +371,9 @@ function closeLoginPopup() {
 
 document.getElementById('btnLoginIcon').addEventListener('click', function() {
     if (isLoggedIn()) {
-        if (confirm('Yakin ingin logout?')) {
-            logoutUser();
-        }
+        // SEMENTARA DINONAKTIFKAN - Nanti buat halaman Profile
+        showToast('👤 Halaman Profile sedang dalam pengembangan');
+        // openLogoutPopup();  // ← DIKOMENTAR DULU
     } else {
         openLoginPopup();
     }
@@ -495,19 +521,51 @@ function registerUserFromPopup() {
     }
 }
 
-// ===== 5g. Logout =====
+// ============================================================
+// LOGOUT POPUP (CUSTOM)
+// ============================================================
 
-function logoutUser() {
-    if (confirm('Yakin ingin logout?')) {
-        clearSession();
-        updateUIForLogin();
-        showToast('Anda telah logout');
-    }
+var logoutOverlay = document.getElementById('logoutOverlay');
+var logoutCancel = document.getElementById('logoutCancel');
+var logoutConfirm = document.getElementById('logoutConfirm');
+
+function openLogoutPopup() {
+    logoutOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
 }
 
+function closeLogoutPopup() {
+    logoutOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Event untuk tombol Logout di sidebar
 document.getElementById('btnLogout').addEventListener('click', function(e) {
     e.preventDefault();
-    logoutUser();
+    openLogoutPopup();  // Ganti dari confirm() langsung
+});
+
+// Tombol Batal
+logoutCancel.addEventListener('click', closeLogoutPopup);
+
+// Tombol Ya, Logout
+logoutConfirm.addEventListener('click', function() {
+    closeLogoutPopup();
+    logoutUser();  // Panggil fungsi logout yang sudah ada
+});
+
+// Klik overlay untuk tutup
+logoutOverlay.addEventListener('click', function(e) {
+    if (e.target === logoutOverlay) {
+        closeLogoutPopup();
+    }
+});
+
+// ESC untuk tutup popup
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeLogoutPopup();
+    }
 });
 
 // ===== 5h. Guest Login Link =====
@@ -530,14 +588,32 @@ document.getElementById('forgotPassword').addEventListener('click', function(e) 
 
 function navigateTo(page) {
     var programPages = ['keuangan', 'tugas', 'kegiatan'];
+    
+    // Cek login untuk akses program
     if (programPages.indexOf(page) !== -1 && !isLoggedIn()) {
         showToast('🔒 Silakan login terlebih dahulu untuk mengakses program!');
         openLoginPopup();
         return;
     }
+
+    // ============================================================
+// SIDEBAR PROGRAM LINKS
+// ============================================================
+
+// Ambil semua link di sidebar yang memiliki data-page
+document.querySelectorAll('.sidebar-menu .dropdown-link[data-page]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var page = this.dataset.page;
+        if (page) {
+            navigateTo(page);
+        }
+    });
+});
     
     console.log('📱 Navigasi ke:', page);
     
+    // Update active link di sidebar
     document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
         link.classList.remove('active');
         if (link.dataset.page === page) {
@@ -554,15 +630,39 @@ function navigateTo(page) {
     
     var name = pageNames[page] || page;
     
+    // Redirect ke halaman program jika sudah login
     if (programPages.indexOf(page) !== -1 && isLoggedIn()) {
         showToast('📋 Membuka halaman: ' + name);
-        // window.location.href = 'program/' + page + '/index.html';
+        window.location.href = '../program/' + page + '/' + page + '.html';
         return;
     }
     
     showToast('📋 Membuka halaman: ' + name);
     closeSidebar();
 }
+
+// ===== Event Listener untuk semua link dengan data-page =====
+document.querySelectorAll('[data-page]').forEach(function(element) {
+    element.addEventListener('click', function(e) {
+        // Jika ini link (a) atau button
+        if (this.tagName === 'A' || this.tagName === 'BUTTON') {
+            e.preventDefault();
+        }
+        var page = this.dataset.page;
+        if (page) {
+            navigateTo(page);
+        }
+    });
+});
+
+// ===== Sidebar Links =====
+document.querySelectorAll('.sidebar-link[data-page]').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        var page = this.dataset.page;
+        if (page) navigateTo(page);
+    });
+});
 
 // ============================================================
 // 7. NOTIFIKASI

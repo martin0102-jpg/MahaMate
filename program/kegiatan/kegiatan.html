@@ -17,14 +17,124 @@
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="../../dashboard/dashboard.html" class="btn-back">
-                <span class="material-symbols-rounded">arrow_back</span>
-                Kembali ke Dashboard
-            </a>
-            <span class="brand-text">Maha<span>Mate</span></span>
-            <div class="navbar-spacer"></div>
+            <div class="navbar-left">
+                <a href="../../dashboard/dashboard.html" class="nabar-brand">
+                    <img src="../../assets/logo.png" alt="MahaMate" width="36" height="36" class="rounded-circle"   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22%3E%3Crect width=%2236%22 height=%2236%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2218%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                    <span class="brand-text">Maha<span>Mate</span></span>
+                </a>
+            </div>
+
+            <div class="navbar-right">
+                <button class="btn-theme" id="themeToggle" title="Toggle Theme">
+                    <span class="material-symbols-rounded" id="themeIcon">dark_mode</span>
+                </button>
+                <button class="btn-login" id="btnLoginIcon" title="Login">
+                    <span class="material-symbols-rounded" id="loginIcon">account_circle</span>
+                </button>
+                <button class="btn-menu" id="menuToggle">
+                    <span class="material-symbols-rounded">menu</span>
+                </button>
+            </div>
         </div>
     </nav>
+
+
+    <!-- SIDEBAR  -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+            <div class="sidebar-header">
+                <a href="../../dashboard/dashboard.html" class="sidebar-brand">
+                    <img src="../../assets/logo.png" alt="MahaMate" width="40" height="40"   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2220%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                    <span class="sidebar-brand=text">Maha<span>Mate</span></span>
+                </a>
+
+                <button class="sidebar-close" id="sidebarClose">
+                    <span class="material-symbols-rounded">close</span>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul class="sidebar-menu">
+                    <!-- DASHBOARD -->
+                     <li class="side-baritem">
+                        <a href="../../dashboard/dashboard.html" class="sidebar-link">
+                            <span class="material-symbols-rounded">dashboard</span>
+
+                            <span>Dashboard</span>
+                        </a>
+                     </li>
+
+                     <li class="sidebar-item dropdown-container open">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <span class="material-symbols-rounded">apps</span>
+                            <span>Program</span>
+                            <span class="material-symbols-rounded">keyboard_arrow_down</span></a>
+
+                        <ul class="dropdown-menu">
+                            <li><a href="../keuangan/keuangan.html" class="dropdown-link active">
+                                <span class="material-symbols-rounded">payments</span>Keuangan
+                            </a></li>
+                            <li><a href="../tugas/tugas.html" class="dropdown-link active">
+                                <span class="material-symbols-rounded">assignment</span>Tugas
+                            </a></li>
+                            <li><a href="kegiatan.html" class="dropdown-link active">
+                                <span class="material-symbols-rounded">event_note</span>Kegiatan
+                            </a></li>
+                            
+                            
+                        </ul>
+                     </li>
+
+                     <!-- Kontak -->
+<li class="sidebar-item dropdown-container">
+    <a href="#" class="sidebar-link dropdown-toggle">
+        <span class="material-symbols-rounded">contacts</span>
+        <span>Kontak</span>
+        <span class="material-symbols-rounded dropdown-icon">keyboard_arrow_down</span>
+    </a>
+    <ul class="dropdown-menu">
+        <li><a href="https://github.com" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">code</span> Github</a></li>
+        <li><a href="mailto:email@example.com" class="dropdown-link"><span class="material-symbols-rounded">email</span> Email</a></li>
+        <li><a href="https://instagram.com" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">photo_camera</span> Instagram</a></li>
+        <li><a href="https://linkedin.com" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">work</span> Linkedin</a></li>
+    </ul>
+</li>
+
+               <!-- MENU BAWAH (Profile & Logout) -->
+    <ul class="sidebar-menu sidebar-menu-bottom">
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link" id="profileLink">
+                <span class="material-symbols-rounded">account_circle</span>
+                <span id="profileText">Profile</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="#" class="sidebar-link" id="btnLogout">
+                <span class="material-symbols-rounded">logout</span>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+
+            </nav>
+        </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- LOGOUT POPUP -->
+     <div class="logout-overlay" id="logoutOverlay">
+        <div class="logout-popup">
+            <div class="logout-icon">🚪</div>
+            <h3 class="logout-title">Konfirmasi Logout</h3>
+            <p class="logout-message">Apakah anda yakin ingin logout?</p>
+            <p class="logout-submessage">Anda Akan keluar dari akun anda</p>
+            <div class="logout-actions">
+                <button class="btn btn-cancel" id="logoutCancel">Batal</button>
+                <button class="btn btn-logout-confirm" id="logoutConfirm">Ya, Logout</button>
+            </div>
+        </div>
+     </div>
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
@@ -191,6 +301,41 @@
             </div>
         </div>
     </main>
+
+      <!-- FOOTER -->
+     <footer class="footer-section">
+        <div class="footer-grid">
+            <div class="footer-col footer-about">
+                <h3><span class="maha">Maha</span><span class="mate">Mate</span></h3>
+                <p>Membantu Kamu Memanagae Keuangan, Tugas, Kegiatan</p>
+                <div class="footer-divier"></div>
+                <p class="footer-tagline">Tempat Terbaik untuk mengelola tim & Proyek</p>
+            </div>
+
+            <div class="footer-col footer-program">
+                <h4>📋 Program</h4>
+                <ul class="footer-links">
+                    <li><a href="../keuangan/keuangan.html"><span class="material-symbols-rounded">payments</span>Keuangan</a></li>
+                    <li><a href="../tugas/tugas.html"><span class="material-symbols-rounded">assignment</span>tugas</a></li>
+                    <li><a href="kegiatan.html"><span class="material-symbols-rounded">event_note</span>Kegiatan</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col footer-kontak">
+                <h4>📱 Kontak</h4>
+                  <ul class="footer-links">
+                    <li><a href="#"><span class="material-symbols-rounded">code</span>Github</a></li>
+                    <li><a href=""><span class="material-symbols-rounded">email</span>Email</a></li>
+                    <li><a href="#"><span class="material-symbols-rounded">photo_camera</span>Instagram</a></li>
+                    <li><a href="#"><span class="material-symbols-rounded">work</span>Linkedin</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 MahaMate. Dibangun dengan 💙 oleh Tim MahaMate</p>
+        </div>
+     </footer>
 
     <!-- TOAST -->
     <div id="toastContainer">

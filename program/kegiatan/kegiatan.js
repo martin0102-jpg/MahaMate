@@ -9,6 +9,218 @@
 // 6. INITIALIZATION
 // ============================================================
 
+
+
+// ===== 1a. SIDEBAR TOGGLE =====
+var sidebar = document.getElementById('sidebar');
+var sidebarOverlay = document.getElementById('sidebarOverlay');
+var menuToggle = document.getElementById('menuToggle');
+var sidebarClose = document.getElementById('sidebarClose');
+
+function openSidebar() {
+    if (sidebar) {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        console.log('✅ Sidebar dibuka');
+    }
+}
+
+function closeSidebar() {
+    if (sidebar) {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        console.log('✅ Sidebar ditutup');
+    }
+}
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', openSidebar);
+} else {
+    console.log('❌ menuToggle tidak ditemukan!');
+}
+
+if (sidebarClose) {
+    sidebarClose.addEventListener('click', closeSidebar);
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+}
+
+// ===== 1b. DROPDOWN TOGGLE (Sidebar) =====
+var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+dropdownToggles.forEach(function(toggle) {
+    toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var parent = this.closest('.sidebar-item');
+        if (!parent) return;
+        
+        var isOpen = parent.classList.contains('open');
+
+        document.querySelectorAll('.sidebar-item.open').forEach(function(item) {
+            if (item !== parent) {
+                item.classList.remove('open');
+            }
+        });
+
+        if (isOpen) {
+            parent.classList.remove('open');
+        } else {
+            parent.classList.add('open');
+        }
+    });
+});
+
+// ===== 1c. THEME TOGGLE =====
+var themeToggle = document.getElementById('themeToggle');
+var themeIcon = document.getElementById('themeIcon');
+var isDark = localStorage.getItem('theme') === 'dark';
+
+if (isDark) {
+    document.body.classList.add('dark-mode');
+    if (themeIcon) themeIcon.textContent = 'light_mode';
+}
+
+if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+        isDark = !isDark;
+        
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            themeIcon.textContent = 'light_mode';
+            localStorage.setItem('theme', 'dark');
+            showToast('🌙 Mode Dark diaktifkan', 'info');
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeIcon.textContent = 'dark_mode';
+            localStorage.setItem('theme', 'light');
+            showToast('☀️ Mode Light diaktifkan', 'info');
+        }
+    });
+}
+
+// ===== 1d. LOGIN STATE =====
+function isLoggedIn() {
+    return localStorage.getItem('mahamate_session') !== null;
+}
+
+function getCurrentUser() {
+    var session = localStorage.getItem('mahamate_session'); // ← PAKAI TANDA PETIK!
+    if (!session) return null;
+    try {
+        return JSON.parse(session);
+    } catch (e) {
+        return null;
+    }
+}
+
+function updateUIForLogin() {
+    var session = getCurrentUser();
+    var loginIcon = document.getElementById('loginIcon');
+    var btnLogin = document.getElementById('btnLoginIcon');
+    var profileText = document.getElementById('profileText');
+    
+    if (session) {
+        if (btnLogin) {
+            btnLogin.classList.add('logged-in');
+            btnLogin.title = session.name + ' (Klik untuk logout)';
+        }
+        if (loginIcon) loginIcon.textContent = 'account_circle';
+        if (profileText) profileText.textContent = session.name;
+    } else {
+        if (btnLogin) {
+            btnLogin.classList.remove('logged-in');
+            btnLogin.title = 'Login';
+        }
+        if (loginIcon) loginIcon.textContent = 'account_circle';
+        if (profileText) profileText.textContent = 'Profile';
+    }
+}
+
+// ===== 1e. LOGOUT POPUP =====
+var logoutOverlay = document.getElementById('logoutOverlay');
+var logoutCancel = document.getElementById('logoutCancel');
+var logoutConfirm = document.getElementById('logoutConfirm');
+
+function openLogoutPopup() {
+    if (logoutOverlay) {
+        logoutOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeLogoutPopup() {
+    if (logoutOverlay) {
+        logoutOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+if (logoutCancel) {
+    logoutCancel.addEventListener('click', closeLogoutPopup);
+}
+
+if (logoutConfirm) {
+    logoutConfirm.addEventListener('click', function() {
+        localStorage.removeItem('mahamate_session');
+        updateUIForLogin();
+        closeLogoutPopup();
+        showToast('Anda telah logout', 'warning');
+    });
+}
+
+if (logoutOverlay) {
+    logoutOverlay.addEventListener('click', function(e) {
+        if (e.target === logoutOverlay) {
+            closeLogoutPopup();
+        }
+    });
+}
+
+// ===== 1f. LOGIN ICON CLICK (Navbar) =====
+var btnLoginIcon = document.getElementById('btnLoginIcon');
+if (btnLoginIcon) {
+    btnLoginIcon.addEventListener('click', function() {
+        if (isLoggedIn()) {
+            showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
+        } else {
+            window.location.href = '../../dashboard.html';
+        }
+    });
+}
+
+// ===== 1g. LOGOUT FROM SIDEBAR =====
+var btnLogout = document.getElementById('btnLogout');
+if (btnLogout) {
+    btnLogout.addEventListener('click', function(e) {
+        e.preventDefault();
+        openLogoutPopup();
+    });
+}
+
+// ===== 1h. PROFILE LINK =====
+var profileLink = document.getElementById('profileLink');
+if (profileLink) {
+    profileLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (isLoggedIn()) {
+            showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
+        } else {
+            window.location.href = '../../dashboard.html';
+        }
+    });
+}
+
+// ===== 1i. UPDATE UI SAAT LOAD =====
+updateUIForLogin();
+
+
+
 // ============================================================
 // 1. UTILITY FUNCTIONS
 // ============================================================

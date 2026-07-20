@@ -51,7 +51,7 @@
         <div class="sidebar-inner">
             <div class="sidebar-header">
                 <a href="#" class="sidebar-brand">
-                    <img src="assets/logo.png" alt="MahaMate" width="40" height="40" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2220%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                    <img src="../assets/logo.png" alt="MahaMate" width="40" height="40" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2220%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
                     <span class="sidebar-brand-text">Maha<span>Mate</span></span>
                 </a>
                 <button class="sidebar-close" id="sidebarClose">
@@ -76,9 +76,9 @@
                             <span class="badge-lock" id="loginBadge">🔒</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="../program/keuangann/keuangan.html" class="dropdown-link"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
-                            <li><a href="../program/tugas/tugas.html" class="dropdown-link"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
-                            <li><a href="../program/kegiatan/kegiatan.html" class="dropdown-link"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
+                            <li><a href="#" class="dropdown-link" data-page="keuangan"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
+                            <li><a href="#" class="dropdown-link" data-page="tugas"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
+                            <li><a href="#" class="dropdown-link" data-page="kegiatan"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
                         </ul>
                     </li>
 
@@ -116,6 +116,24 @@
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+        <!-- ============================================================ -->
+    <!-- LOGOUT POPUP (CUSTOM) -->
+    <!-- ============================================================ -->
+    <div class="logout-overlay" id="logoutOverlay">
+        <div class="logout-popup">
+            <div class="logout-icon">🚪</div>
+            <h3 class="logout-title">Konfirmasi Logout</h3>
+            <p class="logout-message">Apakah Anda yakin ingin logout?</p>
+            <p class="logout-submessage">Anda akan keluar dari akun Anda.</p>
+            <div class="logout-actions">
+                <button class="btn btn-cancel" id="logoutCancel">Batal</button>
+                <button class="btn btn-logout-confirm" id="logoutConfirm">Ya, Logout</button>
+            </div>
+        </div>
+    </div>
+    
 
     <!-- ============================================================ -->
     <!-- LOGIN POPUP -->
@@ -172,16 +190,10 @@
                 </div>
 
                 <div class="welcome-section">
-                    <h1>SELAMAT DATANG DI <span class="highlight-maha">Maha</span><span class="highlight-mate">Mate</span></h1>
+                    <h1 id="welcomeTitle">SELAMAT DATANG DI <span class="highlight-maha">Maha</span><span class="highlight-mate">Mate</span></h1>
                     <p class="slogan" id="welcomeSlogan">
                         Membantu Kamu <span>memanage</span> Keuangan, Tugas, Dan Kegiatan
                     </p>
-                    <div id="userGreeting" class="user-greeting hidden">
-                        <span class="greeting-badge">
-                            <span class="material-symbols-rounded">check_circle</span>
-                            Selamat datang, <strong id="greetingName">User</strong>!
-                        </span>
-                    </div>
                 </div>
 
                 <div class="program-grid">
@@ -191,7 +203,7 @@
                         </div>
                         <h3>Manajemen Keuangan</h3>
                         <p>Atur keuangan Anda dengan sistem yang transparan dan akurat</p>
-                        <a href="../program/keuangann/keuangan.html" class="card-btn">Lihat Detail →</a>
+                        <a href="#" class="card-btn" data-page="keuangan">Lihat Detail →</a>
                         <div class="program-lock">🔒 Login Required</div>
                     </div>
 
@@ -201,7 +213,7 @@
                         </div>
                         <h3>Manajemen Tugas</h3>
                         <p>Kelola tugas Anda dengan mudah, terstruktur, dan efisien</p>
-                        <a href="../program/tugas/tugas.html" class="card-btn">Lihat Detail →</a>
+                        <a href="#" class="card-btn" data-page="tugas">Lihat Detail →</a>
                         <div class="program-lock">🔒 Login Required</div>
                     </div>
 
@@ -211,7 +223,7 @@
                         </div>
                         <h3>Manajemen Kegiatan</h3>
                         <p>Rencanakan & pantau kegiatan Anda secara real-time</p>
-                        <a href="../program/kegiatan/kegiatan.html" class="card-btn">Lihat Detail →</a>
+                        <a href="#" class="card-btn" data-page="kegiatan">Lihat Detail →</a>
                         <div class="program-lock">🔒 Login Required</div>
                     </div>
                 </div>
@@ -238,9 +250,9 @@
                 <div class="footer-col footer-program">
                     <h4>📋 Program</h4>
                     <ul class="footer-links">
-                        <li><a href="../program/keuangann/keuangan.html"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
-                        <li><a href="../program/tugas/tugas.html"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
-                        <li><a href="../program/kegiatan/kegiatan.html"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
+                        <li><a href="#" data-page="keuangan"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
+                        <li><a href="#" data-page="tugas"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
+                        <li><a href="#" data-page="kegiatan"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
                     </ul>
                 </div>
                 

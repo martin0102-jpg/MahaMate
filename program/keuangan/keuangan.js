@@ -1,16 +1,233 @@
 // ============================================================
 // PROGRAM KEUANGAN - MAHAMATE
 // ============================================================
-// 1. UTILITY FUNCTIONS
-// 2. DATA FUNCTIONS (LocalStorage)
-// 3. DOM FUNCTIONS (Render UI)
-// 4. LOGIC FUNCTIONS
-// 5. EVENT LISTENERS
-// 6. INITIALIZATION
-// ============================================================
 
 // ============================================================
-// 1. UTILITY FUNCTIONS
+// 1. SIDEBAR & NAVBAR FUNCTIONS
+// ============================================================
+
+console.log('🔧 Inisialisasi Sidebar...');
+
+// ===== 1a. SIDEBAR TOGGLE =====
+var sidebar = document.getElementById('sidebar');
+var sidebarOverlay = document.getElementById('sidebarOverlay');
+var menuToggle = document.getElementById('menuToggle');
+var sidebarClose = document.getElementById('sidebarClose');
+
+function openSidebar() {
+    if (sidebar) {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        console.log('✅ Sidebar dibuka');
+    }
+}
+
+function closeSidebar() {
+    if (sidebar) {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+        console.log('✅ Sidebar ditutup');
+    }
+}
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', openSidebar);
+} else {
+    console.log('❌ menuToggle tidak ditemukan!');
+}
+
+if (sidebarClose) {
+    sidebarClose.addEventListener('click', closeSidebar);
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', closeSidebar);
+}
+
+// ===== 1b. DROPDOWN TOGGLE (Sidebar) =====
+var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+dropdownToggles.forEach(function(toggle) {
+    toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var parent = this.closest('.sidebar-item');
+        if (!parent) return;
+        
+        var isOpen = parent.classList.contains('open');
+
+        document.querySelectorAll('.sidebar-item.open').forEach(function(item) {
+            if (item !== parent) {
+                item.classList.remove('open');
+            }
+        });
+
+        if (isOpen) {
+            parent.classList.remove('open');
+        } else {
+            parent.classList.add('open');
+        }
+    });
+});
+
+// ===== 1c. THEME TOGGLE =====
+var themeToggle = document.getElementById('themeToggle');
+var themeIcon = document.getElementById('themeIcon');
+var isDark = localStorage.getItem('theme') === 'dark';
+
+if (isDark) {
+    document.body.classList.add('dark-mode');
+    if (themeIcon) themeIcon.textContent = 'light_mode';
+}
+
+if (themeToggle) {
+    themeToggle.addEventListener('click', function() {
+        isDark = !isDark;
+        
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            themeIcon.textContent = 'light_mode';
+            localStorage.setItem('theme', 'dark');
+            showToast('🌙 Mode Dark diaktifkan', 'info');
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeIcon.textContent = 'dark_mode';
+            localStorage.setItem('theme', 'light');
+            showToast('☀️ Mode Light diaktifkan', 'info');
+        }
+    });
+}
+
+// ===== 1d. LOGIN STATE =====
+function isLoggedIn() {
+    return localStorage.getItem('mahamate_session') !== null;
+}
+
+function getCurrentUser() {
+    var session = localStorage.getItem('mahamate_session'); // ← PAKAI TANDA PETIK!
+    if (!session) return null;
+    try {
+        return JSON.parse(session);
+    } catch (e) {
+        return null;
+    }
+}
+
+function updateUIForLogin() {
+    var session = getCurrentUser();
+    var loginIcon = document.getElementById('loginIcon');
+    var btnLogin = document.getElementById('btnLoginIcon');
+    var profileText = document.getElementById('profileText');
+    
+    if (session) {
+        if (btnLogin) {
+            btnLogin.classList.add('logged-in');
+            btnLogin.title = session.name + ' (Klik untuk logout)';
+        }
+        if (loginIcon) loginIcon.textContent = 'account_circle';
+        if (profileText) profileText.textContent = session.name;
+    } else {
+        if (btnLogin) {
+            btnLogin.classList.remove('logged-in');
+            btnLogin.title = 'Login';
+        }
+        if (loginIcon) loginIcon.textContent = 'account_circle';
+        if (profileText) profileText.textContent = 'Profile';
+    }
+}
+
+// ===== 1e. LOGOUT POPUP =====
+var logoutOverlay = document.getElementById('logoutOverlay');
+var logoutCancel = document.getElementById('logoutCancel');
+var logoutConfirm = document.getElementById('logoutConfirm');
+
+function openLogoutPopup() {
+    if (logoutOverlay) {
+        logoutOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeLogoutPopup() {
+    if (logoutOverlay) {
+        logoutOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+if (logoutCancel) {
+    logoutCancel.addEventListener('click', closeLogoutPopup);
+}
+
+if (logoutConfirm) {
+    logoutConfirm.addEventListener('click', function() {
+        localStorage.removeItem('mahamate_session');
+        updateUIForLogin();
+        closeLogoutPopup();
+        showToast('Anda telah logout', 'warning');
+    });
+}
+
+if (logoutOverlay) {
+    logoutOverlay.addEventListener('click', function(e) {
+        if (e.target === logoutOverlay) {
+            closeLogoutPopup();
+        }
+    });
+}
+
+// ===== 1f. LOGIN ICON CLICK (Navbar) =====
+var btnLoginIcon = document.getElementById('btnLoginIcon');
+if (btnLoginIcon) {
+    btnLoginIcon.addEventListener('click', function() {
+        if (isLoggedIn()) {
+            showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
+        } else {
+            window.location.href = '../../dashboard.html';
+        }
+    });
+}
+
+// ===== 1g. LOGOUT FROM SIDEBAR =====
+var btnLogout = document.getElementById('btnLogout');
+if (btnLogout) {
+    btnLogout.addEventListener('click', function(e) {
+        e.preventDefault();
+        openLogoutPopup();
+    });
+}
+
+// ===== 1h. PROFILE LINK =====
+var profileLink = document.getElementById('profileLink');
+if (profileLink) {
+    profileLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (isLoggedIn()) {
+            showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
+        } else {
+            window.location.href = '../../dashboard.html';
+        }
+    });
+}
+
+// ===== 1i. UPDATE UI SAAT LOAD =====
+updateUIForLogin();
+
+// ===== 1j. AKTIFKAN MENU YANG SEDANG DIBUKA =====
+document.querySelectorAll('.dropdown-link.active').forEach(function(link) {
+    var parent = link.closest('.sidebar-item');
+    if (parent) {
+        parent.classList.add('open');
+    }
+});
+
+console.log('✅ Sidebar & Navbar siap!');
+
+// ============================================================
+// 2. UTILITY FUNCTIONS
 // ============================================================
 
 /**
@@ -75,6 +292,20 @@ function generateId() {
  */
 function showToast(message, type) {
     var toast = document.getElementById('toastMessage');
+    if (!toast) {
+        var container = document.getElementById('toastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.style.cssText = 'position:fixed;bottom:30px;right:30px;z-index:9999;';
+            document.body.appendChild(container);
+        }
+        toast = document.createElement('div');
+        toast.id = 'toastMessage';
+        toast.style.cssText = 'background:#151A2D;color:#fff;padding:14px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;box-shadow:0 8px 30px rgba(0,0,0,0.2);border-left:4px solid #00C2FF;max-width:400px;display:none;opacity:0;transition:opacity 0.3s ease;';
+        container.appendChild(toast);
+    }
+    
     var colors = {
         success: '#1B4D3E',
         danger: '#dc3545',
@@ -84,14 +315,20 @@ function showToast(message, type) {
     toast.textContent = message;
     toast.style.borderLeftColor = colors[type] || colors.info;
     toast.className = 'show';
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+    
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(function() {
-        toast.className = '';
+        toast.style.opacity = '0';
+        setTimeout(function() {
+            toast.style.display = 'none';
+        }, 300);
     }, 2500);
 }
 
 // ============================================================
-// 2. DATA FUNCTIONS (LocalStorage)
+// 3. DATA FUNCTIONS (LocalStorage)
 // ============================================================
 
 function getStorageKey(bulan, tahun) {
@@ -123,43 +360,66 @@ function deleteData(bulan, tahun) {
 }
 
 // ============================================================
-// 3. DOM FUNCTIONS (Render UI)
+// 4. DOM FUNCTIONS (Render UI)
 // ============================================================
 
 function renderMenuUtama() {
-    document.getElementById('menuUtama').classList.remove('hidden');
-    document.getElementById('formKerja').classList.add('hidden');
+    var menu = document.getElementById('menuUtama');
+    var form = document.getElementById('formKerja');
+    if (menu) menu.classList.remove('hidden');
+    if (form) form.classList.add('hidden');
 }
 
 function renderFormKerja(mode) {
-    document.getElementById('menuUtama').classList.add('hidden');
-    document.getElementById('formKerja').classList.remove('hidden');
+    var menu = document.getElementById('menuUtama');
+    var form = document.getElementById('formKerja');
+    if (menu) menu.classList.add('hidden');
+    if (form) form.classList.remove('hidden');
     
     var title = document.getElementById('formTitle');
-    if (mode === 'mode1') {
-        title.textContent = '📋 Mode: Pelacak Pengeluaran Mandiri';
-        document.getElementById('mode2Container').classList.add('hidden');
-    } else {
-        title.textContent = '💰 Mode: Manajer Anggaran & Saldo';
-        document.getElementById('mode2Container').classList.remove('hidden');
+    if (title) {
+        if (mode === 'mode1') {
+            title.textContent = '📋 Mode: Pelacak Pengeluaran Mandiri';
+            var mode2 = document.getElementById('mode2Container');
+            if (mode2) mode2.classList.add('hidden');
+        } else {
+            title.textContent = '💰 Mode: Manajer Anggaran & Saldo';
+            var mode2 = document.getElementById('mode2Container');
+            if (mode2) mode2.classList.remove('hidden');
+        }
     }
     
-    document.getElementById('inputTanggal').value = getToday();
-    document.getElementById('inputNominal').value = '';
-    document.getElementById('inputDeskripsi').value = '';
-    document.getElementById('inputAnggaranAwal').value = '';
-    document.getElementById('statusSaldoContainer').classList.add('hidden');
-    document.getElementById('biayaTetapContainer').innerHTML = '';
+    var tanggal = document.getElementById('inputTanggal');
+    if (tanggal) tanggal.value = getToday();
     
-    document.getElementById('formKerja').dataset.mode = mode;
+    var nominal = document.getElementById('inputNominal');
+    if (nominal) nominal.value = '';
     
-    var bulan = document.getElementById('selectBulan').value;
-    var tahun = parseInt(document.getElementById('inputTahun').value);
-    loadDataAndRender(bulan, tahun);
+    var deskripsi = document.getElementById('inputDeskripsi');
+    if (deskripsi) deskripsi.value = '';
+    
+    var anggaran = document.getElementById('inputAnggaranAwal');
+    if (anggaran) anggaran.value = '';
+    
+    var statusSaldo = document.getElementById('statusSaldoContainer');
+    if (statusSaldo) statusSaldo.classList.add('hidden');
+    
+    var biayaContainer = document.getElementById('biayaTetapContainer');
+    if (biayaContainer) biayaContainer.innerHTML = '';
+    
+    var formKerja = document.getElementById('formKerja');
+    if (formKerja) formKerja.dataset.mode = mode;
+    
+    var bulan = document.getElementById('selectBulan');
+    var tahun = document.getElementById('inputTahun');
+    if (bulan && tahun) {
+        loadDataAndRender(bulan.value, parseInt(tahun.value));
+    }
 }
 
 function renderBiayaTetap(biayaTetap) {
     var container = document.getElementById('biayaTetapContainer');
+    if (!container) return;
     container.innerHTML = '';
     
     if (!biayaTetap || biayaTetap.length === 0) {
@@ -191,9 +451,11 @@ function renderTabel(pengeluaran) {
     var footer = document.getElementById('tabelFooter');
     var totalEl = document.getElementById('tabelTotal');
     
+    if (!tbody) return;
+    
     if (!pengeluaran || pengeluaran.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Belum ada data pengeluaran</td></tr>';
-        footer.classList.add('hidden');
+        if (footer) footer.classList.add('hidden');
         return;
     }
     
@@ -219,8 +481,8 @@ function renderTabel(pengeluaran) {
     });
     
     tbody.innerHTML = html;
-    footer.classList.remove('hidden');
-    totalEl.textContent = formatRupiah(total);
+    if (footer) footer.classList.remove('hidden');
+    if (totalEl) totalEl.textContent = formatRupiah(total);
     
     tbody.querySelectorAll('.btn-hapus').forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -234,9 +496,11 @@ function renderRingkasan(data, bulan, tahun) {
     var textEl = document.getElementById('ringkasanText');
     var totalEl = document.getElementById('ringkasanTotal');
     
+    if (!textEl) return;
+    
     if (!data) {
         textEl.textContent = 'Belum ada data untuk bulan ' + bulan + ' ' + tahun;
-        totalEl.textContent = 'Rp 0';
+        if (totalEl) totalEl.textContent = 'Rp 0';
         return;
     }
     
@@ -261,14 +525,12 @@ function renderRingkasan(data, bulan, tahun) {
     var kalimat = '';
     if (jumlahHari < 30 && jumlahHari > 0) {
         kalimat = 'Total pengeluaran bulan ' + bulan + ' ' + tahun + ' selama ' + jumlahHari + ' hari adalah ' + formatRupiah(totalPengeluaran);
-    } else if (jumlahHari >= 30) {
-        kalimat = 'Total pengeluaran bulan ' + bulan + ' ' + tahun + ' adalah ' + formatRupiah(totalPengeluaran);
     } else {
         kalimat = 'Total pengeluaran bulan ' + bulan + ' ' + tahun + ' adalah ' + formatRupiah(totalPengeluaran);
     }
     
     textEl.textContent = kalimat;
-    totalEl.textContent = formatRupiah(totalPengeluaran);
+    if (totalEl) totalEl.textContent = formatRupiah(totalPengeluaran);
 }
 
 function renderStatusSaldo(data, anggaranAwal) {
@@ -276,6 +538,8 @@ function renderStatusSaldo(data, anggaranAwal) {
     var alertEl = document.getElementById('statusSaldoAlert');
     var textEl = document.getElementById('statusSaldoText');
     var detailEl = document.getElementById('statusSaldoDetail');
+    
+    if (!container) return;
     
     if (!data || !anggaranAwal || anggaranAwal <= 0) {
         container.classList.add('hidden');
@@ -313,7 +577,8 @@ function renderAll(bulan, tahun, data) {
         renderBiayaTetap([]);
         renderTabel([]);
         renderRingkasan(null, bulan, tahun);
-        document.getElementById('statusSaldoContainer').classList.add('hidden');
+        var statusSaldo = document.getElementById('statusSaldoContainer');
+        if (statusSaldo) statusSaldo.classList.add('hidden');
         return;
     }
     
@@ -321,35 +586,22 @@ function renderAll(bulan, tahun, data) {
     renderTabel(data.pengeluaranHarian || []);
     renderRingkasan(data, bulan, tahun);
     
-    var mode = document.getElementById('formKerja').dataset.mode;
-    if (mode === 'mode2') {
+    var formKerja = document.getElementById('formKerja');
+    if (formKerja && formKerja.dataset.mode === 'mode2') {
         var anggaranAwal = data.anggaranAwal || 0;
-        document.getElementById('inputAnggaranAwal').value = anggaranAwal > 0 ? formatRupiah(anggaranAwal) : '';
+        var inputAnggaran = document.getElementById('inputAnggaranAwal');
+        if (inputAnggaran) inputAnggaran.value = anggaranAwal > 0 ? formatRupiah(anggaranAwal) : '';
         renderStatusSaldo(data, anggaranAwal);
     }
 }
 
 // ============================================================
-// 4. LOGIC FUNCTIONS
+// 5. LOGIC FUNCTIONS
 // ============================================================
 
 function loadDataAndRender(bulan, tahun) {
     var data = loadData(bulan, tahun);
     renderAll(bulan, tahun, data);
-}
-
-function saveCurrentData() {
-    var bulan = document.getElementById('selectBulan').value;
-    var tahun = parseInt(document.getElementById('inputTahun').value);
-    
-    var data = loadData(bulan, tahun) || {};
-    if (!data.biayaTetap) data.biayaTetap = [];
-    if (!data.pengeluaranHarian) data.pengeluaranHarian = [];
-    if (!data.firstDate) data.firstDate = null;
-    if (!data.anggaranAwal) data.anggaranAwal = 0;
-    
-    saveData(bulan, tahun, data);
-    return data;
 }
 
 function tambahBiayaTetap() {
@@ -365,8 +617,8 @@ function tambahBiayaTetap() {
     renderBiayaTetap(data.biayaTetap);
     renderRingkasan(data, bulan, tahun);
     
-    var mode = document.getElementById('formKerja').dataset.mode;
-    if (mode === 'mode2') {
+    var formKerja = document.getElementById('formKerja');
+    if (formKerja && formKerja.dataset.mode === 'mode2') {
         renderStatusSaldo(data, data.anggaranAwal || 0);
     }
     
@@ -386,8 +638,8 @@ function hapusBiayaTetap(index) {
         renderBiayaTetap(data.biayaTetap);
         renderRingkasan(data, bulan, tahun);
         
-        var mode = document.getElementById('formKerja').dataset.mode;
-        if (mode === 'mode2') {
+        var formKerja = document.getElementById('formKerja');
+        if (formKerja && formKerja.dataset.mode === 'mode2') {
             renderStatusSaldo(data, data.anggaranAwal || 0);
         }
         
@@ -423,8 +675,8 @@ function saveBiayaTetap() {
     renderBiayaTetap(data.biayaTetap);
     renderRingkasan(data, bulan, tahun);
     
-    var mode = document.getElementById('formKerja').dataset.mode;
-    if (mode === 'mode2') {
+    var formKerja = document.getElementById('formKerja');
+    if (formKerja && formKerja.dataset.mode === 'mode2') {
         renderStatusSaldo(data, data.anggaranAwal || 0);
     }
     
@@ -466,14 +718,17 @@ function tambahPengeluaran() {
     renderTabel(data.pengeluaranHarian);
     renderRingkasan(data, bulan, tahun);
     
-    var mode = document.getElementById('formKerja').dataset.mode;
-    if (mode === 'mode2') {
+    var formKerja = document.getElementById('formKerja');
+    if (formKerja && formKerja.dataset.mode === 'mode2') {
         renderStatusSaldo(data, data.anggaranAwal || 0);
     }
     
-    document.getElementById('inputNominal').value = '';
-    document.getElementById('inputDeskripsi').value = '';
-    document.getElementById('inputTanggal').value = getToday();
+    var inputNominal = document.getElementById('inputNominal');
+    var inputDeskripsi = document.getElementById('inputDeskripsi');
+    var inputTanggal = document.getElementById('inputTanggal');
+    if (inputNominal) inputNominal.value = '';
+    if (inputDeskripsi) inputDeskripsi.value = '';
+    if (inputTanggal) inputTanggal.value = getToday();
     
     showToast('Pengeluaran berhasil ditambahkan! 💰', 'success');
 }
@@ -503,8 +758,8 @@ function hapusPengeluaran(id) {
     renderTabel(data.pengeluaranHarian);
     renderRingkasan(data, bulan, tahun);
     
-    var mode = document.getElementById('formKerja').dataset.mode;
-    if (mode === 'mode2') {
+    var formKerja = document.getElementById('formKerja');
+    if (formKerja && formKerja.dataset.mode === 'mode2') {
         renderStatusSaldo(data, data.anggaranAwal || 0);
     }
     
@@ -532,59 +787,87 @@ function saveAnggaranAwal() {
 }
 
 // ============================================================
-// 5. EVENT LISTENERS
+// 6. EVENT LISTENERS (Keuangan)
 // ============================================================
 
 // ===== Menu Utama =====
-document.getElementById('btnMode1').addEventListener('click', function() {
-    renderFormKerja('mode1');
-});
+var btnMode1 = document.getElementById('btnMode1');
+var btnMode2 = document.getElementById('btnMode2');
 
-document.getElementById('btnMode2').addEventListener('click', function() {
-    renderFormKerja('mode2');
-});
+if (btnMode1) {
+    btnMode1.addEventListener('click', function() {
+        renderFormKerja('mode1');
+    });
+}
+
+if (btnMode2) {
+    btnMode2.addEventListener('click', function() {
+        renderFormKerja('mode2');
+    });
+}
 
 // ===== Kembali ke Menu =====
-document.getElementById('btnKembaliMenu').addEventListener('click', function() {
-    saveBiayaTetap();
-    renderMenuUtama();
-});
+var btnKembali = document.getElementById('btnKembaliMenu');
+if (btnKembali) {
+    btnKembali.addEventListener('click', function() {
+        saveBiayaTetap();
+        renderMenuUtama();
+    });
+}
 
 // ===== Muat Data =====
-document.getElementById('btnLoadData').addEventListener('click', function() {
-    var bulan = document.getElementById('selectBulan').value;
-    var tahun = parseInt(document.getElementById('inputTahun').value);
-    loadDataAndRender(bulan, tahun);
-    showToast('Data berhasil dimuat! 📊', 'info');
-});
+var btnLoadData = document.getElementById('btnLoadData');
+if (btnLoadData) {
+    btnLoadData.addEventListener('click', function() {
+        var bulan = document.getElementById('selectBulan').value;
+        var tahun = parseInt(document.getElementById('inputTahun').value);
+        loadDataAndRender(bulan, tahun);
+        showToast('Data berhasil dimuat! 📊', 'info');
+    });
+}
 
 // ===== Tambah Biaya Tetap =====
-document.getElementById('btnTambahBiayaTetap').addEventListener('click', function() {
-    tambahBiayaTetap();
-});
+var btnTambahBiaya = document.getElementById('btnTambahBiayaTetap');
+if (btnTambahBiaya) {
+    btnTambahBiaya.addEventListener('click', function() {
+        tambahBiayaTetap();
+    });
+}
 
 // ===== Tambah Pengeluaran =====
-document.getElementById('btnTambahPengeluaran').addEventListener('click', function() {
-    tambahPengeluaran();
-});
+var btnTambahPengeluaran = document.getElementById('btnTambahPengeluaran');
+if (btnTambahPengeluaran) {
+    btnTambahPengeluaran.addEventListener('click', function() {
+        tambahPengeluaran();
+    });
+}
 
 // ===== Simpan Anggaran Awal =====
-document.getElementById('inputAnggaranAwal').addEventListener('change', function() {
-    saveAnggaranAwal();
-});
+var inputAnggaran = document.getElementById('inputAnggaranAwal');
+if (inputAnggaran) {
+    inputAnggaran.addEventListener('change', function() {
+        saveAnggaranAwal();
+    });
+}
 
-// ===== Enter key untuk menambah pengeluaran =====
-document.getElementById('inputNominal').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        tambahPengeluaran();
-    }
-});
+// ===== Enter key =====
+var inputNominal = document.getElementById('inputNominal');
+if (inputNominal) {
+    inputNominal.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            tambahPengeluaran();
+        }
+    });
+}
 
-document.getElementById('inputDeskripsi').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        tambahPengeluaran();
-    }
-});
+var inputDeskripsi = document.getElementById('inputDeskripsi');
+if (inputDeskripsi) {
+    inputDeskripsi.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            tambahPengeluaran();
+        }
+    });
+}
 
 // ===== Format Rupiah otomatis =====
 document.addEventListener('blur', function(e) {
@@ -599,17 +882,21 @@ document.addEventListener('blur', function(e) {
 }, true);
 
 // ============================================================
-// 6. INITIALIZATION
+// 7. INITIALIZATION
 // ============================================================
 
 function init() {
-    document.getElementById('inputTanggal').value = getToday();
+    var tanggal = document.getElementById('inputTanggal');
+    if (tanggal) tanggal.value = getToday();
     
     var now = new Date();
     var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
                   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-    document.getElementById('selectBulan').value = months[now.getMonth()];
-    document.getElementById('inputTahun').value = now.getFullYear();
+    var selectBulan = document.getElementById('selectBulan');
+    var inputTahun = document.getElementById('inputTahun');
+    
+    if (selectBulan) selectBulan.value = months[now.getMonth()];
+    if (inputTahun) inputTahun.value = now.getFullYear();
     
     renderMenuUtama();
     
@@ -618,3 +905,5 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+console.log('✅ Semua fungsi siap digunakan!');
