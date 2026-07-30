@@ -4,7 +4,7 @@
 
 const express = require('express');
 const router = express.Router();
-const tugasController = require('../controllers/tugasController');
+const tugasController = require('../controllers/tugasControler');
 
 router.get('/', tugasController.getAllTugas);
 router.get('/:id', tugasController.getTugasById);

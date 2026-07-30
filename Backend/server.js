@@ -1,14 +1,15 @@
-// ==================================
+// ============================================================
 // SERVER UTAMA - MAHAMATE BACKEND
-// ==================================
+// ============================================================
 
 const express = require('express');
 const cors = require('cors');
 const { testConnection } = require('./config/database');
 
 // ===== IMPORT ROUTES =====
-const tugasRoutes = require('./routes/tugas');
-const keuanganRoutes = require('./routes/keuangan');
+const tugasRoutes = require('./routes/routestugas.js');
+const keuanganRoutes = require('./routes/routesKeuangan.js');
+const kegiatanRoutes = require('./routes/routesKegiatan.js');
 
 const app = express();
 const PORT = 3000;
@@ -31,22 +32,18 @@ app.get('/', (req, res) => {
         status: 'Running',
         endpoints: {
             tugas: '/api/tugas',
-            keuangan: '/api/keuangan'
+            keuangan: '/api/keuangan',
+            kegiatan: '/api/kegiatan'
         }
     });
 });
 
-// ==============================
-// ROUTES TUGAS (CRUD)
-// ==============================
+// ===== ROUTES =====
 app.use('/api/tugas', tugasRoutes);
-
-// ==============================
-// ROUTES KEUANGAN (CRUD)
-// ==============================
 app.use('/api/keuangan', keuanganRoutes);
+app.use('/api/kegiatan', kegiatanRoutes);
 
-// 404 HANDLER
+// ===== 404 HANDLER =====
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -54,7 +51,7 @@ app.use((req, res) => {
     });
 });
 
-// ERROR HANDLER
+// ===== ERROR HANDLER =====
 app.use((err, req, res, next) => {
     console.error('❌ Error:', err.message);
     res.status(500).json({
@@ -64,7 +61,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-// START SERVER
+// ===== START SERVER =====
 async function startServer() {
     console.log('🔌 Mengecek koneksi database...');
     const dbConnected = await testConnection();
@@ -76,19 +73,28 @@ async function startServer() {
     
     app.listen(PORT, () => {
         console.log('========================================');
-        console.log(` Server sedang jalan di http://localhost:${PORT}`);
+        console.log(`🚀 Server jalan di http://localhost:${PORT}`);
         console.log('========================================');
-        console.log(` GET  /api/tugas        - Ambil semua tugas`);
-        console.log(` GET  /api/tugas/:id    - Ambil 1 tugas`);
-        console.log(` POST /api/tugas        - Tambah tugas`);
-        console.log(` PUT  /api/tugas/:id    - Update tugas`);
-        console.log(` DELETE /api/tugas/:id  - Hapus tugas`);
-        console.log(` PATCH /api/tugas/:id/status - Update status`);
-        console.log(` GET  /api/keuangan     - Ambil semua keuangan`);
-        console.log(` GET  /api/keuangan/:bulan/:tahun - By bulan & tahun`);
-        console.log(` POST /api/keuangan     - Tambah keuangan`);
-        console.log(` PUT  /api/keuangan/:id - Update keuangan`);
-        console.log(` DELETE /api/keuangan/:id - Hapus keuangan`);
+        console.log(`📋 GET  /api/tugas        - Ambil semua tugas`);
+        console.log(`📋 GET  /api/tugas/:id    - Ambil 1 tugas`);
+        console.log(`📋 POST /api/tugas        - Tambah tugas`);
+        console.log(`📋 PUT  /api/tugas/:id    - Update tugas`);
+        console.log(`📋 DELETE /api/tugas/:id  - Hapus tugas`);
+        console.log(`📋 PATCH /api/tugas/:id/status - Update status tugas`);
+        console.log('---');
+        console.log(`📋 GET  /api/keuangan     - Ambil semua keuangan`);
+        console.log(`📋 GET  /api/keuangan/:bulan/:tahun - Ambil by bulan/tahun`);
+        console.log(`📋 POST /api/keuangan     - Tambah keuangan`);
+        console.log(`📋 PUT  /api/keuangan/:id - Update keuangan`);
+        console.log(`📋 DELETE /api/keuangan/:id - Hapus keuangan`);
+        console.log('---');
+        console.log(`📋 GET  /api/kegiatan     - Ambil semua kegiatan`);
+        console.log(`📋 GET  /api/kegiatan/:id - Ambil 1 kegiatan`);
+        console.log(`📋 POST /api/kegiatan     - Tambah kegiatan`);
+        console.log(`📋 PUT  /api/kegiatan/:id - Update kegiatan`);
+        console.log(`📋 DELETE /api/kegiatan/:id - Hapus kegiatan`);
+        console.log(`📋 PATCH /api/kegiatan/:id/status - Update status kegiatan`);
+        console.log('========================================');
     });
 }
 
