@@ -10,16 +10,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     
+    <!-- ===== CSS ===== -->
+    <link rel="stylesheet" href="../../dashboard/style-global.css">
     <link rel="stylesheet" href="kegiatan.css">
 </head>
 <body>
 
     <!-- ===== NAVBAR ===== -->
-    <nav class="navbar">
+    <nav class="navbar-custom">
         <div class="navbar-container">
             <div class="navbar-left">
-                <a href="../../dashboard/dashboard.html" class="nabar-brand">
-                    <img src="../../assets/logo.png" alt="MahaMate" width="36" height="36" class="rounded-circle"   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22%3E%3Crect width=%2236%22 height=%2236%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2218%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                <a href="../../dashboard/dashboard.html" class="navbar-brand">
+                    <img src="../../assets/logo.png" alt="MahaMate" width="36" height="36" class="rounded-circle" 
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2236%22 height=%2236%22%3E%3Crect width=%2236%22 height=%2236%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2218%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
                     <span class="brand-text">Maha<span>Mate</span></span>
                 </a>
             </div>
@@ -38,16 +41,15 @@
         </div>
     </nav>
 
-
-    <!-- SIDEBAR  -->
+    <!-- ===== SIDEBAR ===== -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-inner">
             <div class="sidebar-header">
                 <a href="../../dashboard/dashboard.html" class="sidebar-brand">
-                    <img src="../../assets/logo.png" alt="MahaMate" width="40" height="40"   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2220%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
-                    <span class="sidebar-brand=text">Maha<span>Mate</span></span>
+                    <img src="../../assets/logo.png" alt="MahaMate" width="40" height="40" 
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Crect width=%2240%22 height=%2240%22 fill=%22%2300C2FF%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.35em%22 fill=%22white%22 font-size=%2220%22 font-weight=%22bold%22%3EM%3C/text%3E%3C/svg%3E'">
+                    <span class="sidebar-brand-text">Maha<span>Mate</span></span>
                 </a>
-
                 <button class="sidebar-close" id="sidebarClose">
                     <span class="material-symbols-rounded">close</span>
                 </button>
@@ -56,127 +58,95 @@
             <nav class="sidebar-nav">
                 <ul class="sidebar-menu">
                     <!-- DASHBOARD -->
-                     <li class="side-baritem">
+                    <li class="sidebar-item">
                         <a href="../../dashboard/dashboard.html" class="sidebar-link">
                             <span class="material-symbols-rounded">dashboard</span>
-
                             <span>Dashboard</span>
                         </a>
-                     </li>
+                    </li>
 
-                     <li class="sidebar-item dropdown-container open">
+                    <!-- PROGRAM (AKTIF: KEGIATAN) -->
+                    <li class="sidebar-item dropdown-container open">
                         <a href="#" class="sidebar-link dropdown-toggle">
                             <span class="material-symbols-rounded">apps</span>
                             <span>Program</span>
-                            <span class="material-symbols-rounded">keyboard_arrow_down</span></a>
-
+                            <span class="material-symbols-rounded dropdown-icon">keyboard_arrow_down</span>
+                        </a>
                         <ul class="dropdown-menu">
-                            <li><a href="../keuangan/keuangan.html" class="dropdown-link active">
-                                <span class="material-symbols-rounded">payments</span>Keuangan
+                            <li><a href="../keuangan/keuangan.html" class="dropdown-link">
+                                <span class="material-symbols-rounded">payments</span> Keuangan
                             </a></li>
-                            <li><a href="../tugas/tugas.html" class="dropdown-link active">
-                                <span class="material-symbols-rounded">assignment</span>Tugas
+                            <li><a href="../tugas/tugas.html" class="dropdown-link">
+                                <span class="material-symbols-rounded">assignment</span> Tugas
                             </a></li>
                             <li><a href="kegiatan.html" class="dropdown-link active">
-                                <span class="material-symbols-rounded">event_note</span>Kegiatan
+                                <span class="material-symbols-rounded">event_note</span> Kegiatan
                             </a></li>
-                            
-                            
                         </ul>
-                     </li>
+                    </li>
 
-                     <!-- Kontak -->
-<li class="sidebar-item dropdown-container">
-    <a href="#" class="sidebar-link dropdown-toggle">
-        <span class="material-symbols-rounded">contacts</span>
-        <span>Kontak</span>
-        <span class="material-symbols-rounded dropdown-icon">keyboard_arrow_down</span>
-    </a>
-    <ul class="dropdown-menu">
-        <li><a href="https://github.com/martin0102-jpg" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">code</span> Github</a></li>
-        <li><a href="mailto:email@example.com" class="dropdown-link"><span class="material-symbols-rounded">email</span> Email</a></li>
-        <li><a href="https://www.instagram.com/mrtnn1_?igsh=cXdwOGR6NDZrcHBi" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">photo_camera</span> Instagram</a></li>
-        <li><a href="https://www.linkedin.com/in/martin-nurhidayat-4ba435304?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">work</span> Linkedin</a></li>
-    </ul>
-</li>
+                    <!-- KONTAK -->
+                    <li class="sidebar-item dropdown-container">
+                        <a href="#" class="sidebar-link dropdown-toggle">
+                            <span class="material-symbols-rounded">contacts</span>
+                            <span>Kontak</span>
+                            <span class="material-symbols-rounded dropdown-icon">keyboard_arrow_down</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="https://github.com/martin0102-jpg" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">code</span> Github</a></li>
+                            <li><a href="mailto:email@example.com" class="dropdown-link"><span class="material-symbols-rounded">email</span> Email</a></li>
+                            <li><a href="https://www.instagram.com/mrtnn1_?igsh=cXdwOGR6NDZrcHBi" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">photo_camera</span> Instagram</a></li>
+                            <li><a href="https://www.linkedin.com/in/martin-nurhidayat-4ba435304?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="dropdown-link"><span class="material-symbols-rounded">work</span> Linkedin</a></li>
+                        </ul>
+                    </li>
+                </ul>
 
-               <!-- MENU BAWAH (Profile & Logout) -->
-    <ul class="sidebar-menu sidebar-menu-bottom">
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link" id="profileLink">
-                <span class="material-symbols-rounded">account_circle</span>
-                <span id="profileText">Profile</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link" id="btnLogout">
-                <span class="material-symbols-rounded">logout</span>
-                <span>Logout</span>
-            </a>
-        </li>
-    </ul>
-
+                <!-- MENU BAWAH (Profile & Logout) -->
+                <ul class="sidebar-menu sidebar-menu-bottom">
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" id="profileLink">
+                            <span class="material-symbols-rounded">account_circle</span>
+                            <span id="profileText">Profile</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="#" class="sidebar-link" id="btnLogout">
+                            <span class="material-symbols-rounded">logout</span>
+                            <span>Logout</span>
+                        </a>
+                    </li>
+                </ul>
             </nav>
         </div>
     </aside>
 
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- LOGOUT POPUP -->
-     <div class="logout-overlay" id="logoutOverlay">
+    <!-- ===== LOGOUT POPUP ===== -->
+    <div class="logout-overlay" id="logoutOverlay">
         <div class="logout-popup">
             <div class="logout-icon">🚪</div>
             <h3 class="logout-title">Konfirmasi Logout</h3>
             <p class="logout-message">Apakah anda yakin ingin logout?</p>
-            <p class="logout-submessage">Anda Akan keluar dari akun anda</p>
+            <p class="logout-submessage">Anda akan keluar dari akun anda</p>
             <div class="logout-actions">
                 <button class="btn btn-cancel" id="logoutCancel">Batal</button>
                 <button class="btn btn-logout-confirm" id="logoutConfirm">Ya, Logout</button>
             </div>
         </div>
-     </div>
+    </div>
 
     <!-- ===== MAIN CONTENT ===== -->
     <main class="main-content">
         <div class="page-header">
             <h1>📅 Manajemen Kegiatan</h1>
-            <p class="subtitle">Rencanakan dan pantau semua kegiatan Anda</p>
+            <p class="subtitle">Rencanakan dan pantau semua kegiatan Anda dengan mudah</p>
         </div>
 
-        <!-- ===== MENU UTAMA ===== -->
-        <div id="menuUtama">
-            <div class="card-grid">
-                <!-- Kartu 1: Kegiatan Aktif -->
-                <div class="card-menu" id="btnMode1">
-                    <div class="card-icon icon-kegiatan-aktif">
-                        <span class="material-symbols-rounded">event_available</span>
-                    </div>
-                    <h3>📅 Kegiatan Aktif</h3>
-                    <p>Menampilkan semua kegiatan yang sedang berlangsung.</p>
-                    <span class="badge badge-success">Mulai</span>
-                </div>
-                
-                <!-- Kartu 2: Kegiatan Selesai -->
-                <div class="card-menu" id="btnMode2">
-                    <div class="card-icon icon-kegiatan-selesai">
-                        <span class="material-symbols-rounded">check_circle</span>
-                    </div>
-                    <h3>✅ Kegiatan Selesai</h3>
-                    <p>Menampilkan kegiatan yang sudah selesai.</p>
-                    <span class="badge badge-warning">Mulai</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== FORM KERJA ===== -->
-        <div id="formKerja" class="hidden">
-            <button class="btn btn-secondary" id="btnKembaliMenu">
-                <span class="material-symbols-rounded">arrow_back</span>
-                Kembali ke Menu Kegiatan
-            </button>
-            
+        <!-- ===== FORM KERJA (LANGSUNG DITAMPILKAN, TANPA CARD) ===== -->
+        <div id="formKerja">
             <div class="form-container">
-                <h4 class="form-title" id="formTitle">📅 Mode: Kegiatan Aktif</h4>
+                <h4 class="form-title">📅 Daftar Kegiatan</h4>
                 
                 <!-- ===== STATISTIK ===== -->
                 <div class="stats-grid" id="statsContainer">
@@ -197,7 +167,7 @@
                     <div class="stat-card stat-warning">
                         <span class="stat-icon">⏳</span>
                         <div>
-                            <div class="stat-number" id="statBerlangsung">0</div>
+                            <div class="stat-number" id="statAktif">0</div>
                             <div class="stat-label">Berlangsung</div>
                         </div>
                     </div>
@@ -210,14 +180,6 @@
                     </div>
                 </div>
 
-                <!-- ===== KEGIATAN MENDATANG ===== -->
-                <div class="section-container" id="upcomingContainer">
-                    <h5 class="section-title">📅 Kegiatan Mendatang</h5>
-                    <div id="upcomingList" class="upcoming-list">
-                        <p class="text-muted">Tidak ada kegiatan mendatang</p>
-                    </div>
-                </div>
-
                 <!-- ===== INPUT KEGIATAN BARU ===== -->
                 <div class="section-container">
                     <h5 class="section-title">✏️ Tambah Kegiatan Baru</h5>
@@ -227,7 +189,7 @@
                             <input type="text" id="inputNama" placeholder="Masukkan nama kegiatan">
                         </div>
                         <div class="form-group">
-                            <label>Lokasi/Tempat</label>
+                            <label>Lokasi</label>
                             <input type="text" id="inputLokasi" placeholder="Masukkan lokasi">
                         </div>
                     </div>
@@ -282,52 +244,110 @@
                             <thead>
                                 <tr>
                                     <th style="width: 40px;">No</th>
-                                    <th>Nama Kegiatan</th>
+                                    <th>Nama</th>
                                     <th>Lokasi</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Selesai</th>
                                     <th>Status</th>
-                                    <th style="width: 100px;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="tabelBody">
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted">Belum ada kegiatan</td>
+                                    <td colspan="6" class="text-center text-muted">Belum ada kegiatan</td>
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="table-info">
+                        💡 Klik pada baris kegiatan untuk melihat detail lengkap
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-      <!-- FOOTER -->
-     <footer class="footer-section">
+    <!-- ===== PREVIEW POPUP ===== -->
+    <div class="preview-overlay" id="previewOverlay">
+        <div class="preview-popup">
+            <button class="preview-close" id="previewClose">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+            
+            <div class="preview-header">
+                <span class="preview-icon">📅</span>
+                <h3 class="preview-title">Detail Kegiatan</h3>
+            </div>
+            
+            <div class="preview-body">
+                <div class="preview-row">
+                    <span class="preview-label">Nama</span>
+                    <span class="preview-value" id="previewNama">-</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-label">Deskripsi</span>
+                    <span class="preview-value" id="previewDeskripsi">-</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-label">Lokasi</span>
+                    <span class="preview-value" id="previewLokasi">-</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-label">Tanggal Mulai</span>
+                    <span class="preview-value" id="previewMulai">-</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-label">Tanggal Selesai</span>
+                    <span class="preview-value" id="previewSelesai">-</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-label">Status</span>
+                    <span class="preview-value" id="previewStatus">-</span>
+                </div>
+                <div class="preview-row">
+                    <span class="preview-label">Dibuat</span>
+                    <span class="preview-value" id="previewCreated">-</span>
+                </div>
+            </div>
+            
+            <div class="preview-actions">
+                <button class="btn btn-success" id="btnPreviewStatus">
+                    <span class="material-symbols-rounded">sync</span>
+                    Ubah Status
+                </button>
+                <button class="btn btn-danger" id="btnPreviewHapus">
+                    <span class="material-symbols-rounded">delete</span>
+                    Hapus Kegiatan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer-section">
         <div class="footer-grid">
             <div class="footer-col footer-about">
                 <h3><span class="maha">Maha</span><span class="mate">Mate</span></h3>
-                <p>Membantu Kamu Memanagae Keuangan, Tugas, Kegiatan</p>
-                <div class="footer-divier"></div>
+                <p>Membantu Kamu Memanage Keuangan, Tugas, Kegiatan</p>
+                <div class="footer-divider"></div>
                 <p class="footer-tagline">Tempat Terbaik untuk mengelola tim & Proyek</p>
             </div>
 
             <div class="footer-col footer-program">
                 <h4>📋 Program</h4>
                 <ul class="footer-links">
-                    <li><a href="../keuangan/keuangan.html"><span class="material-symbols-rounded">payments</span>Keuangan</a></li>
-                    <li><a href="../tugas/tugas.html"><span class="material-symbols-rounded">assignment</span>tugas</a></li>
-                    <li><a href="kegiatan.html"><span class="material-symbols-rounded">event_note</span>Kegiatan</a></li>
+                    <li><a href="../keuangan/keuangan.html"><span class="material-symbols-rounded">payments</span> Keuangan</a></li>
+                    <li><a href="../tugas/tugas.html"><span class="material-symbols-rounded">assignment</span> Tugas</a></li>
+                    <li><a href="kegiatan.html"><span class="material-symbols-rounded">event_note</span> Kegiatan</a></li>
                 </ul>
             </div>
 
             <div class="footer-col footer-kontak">
                 <h4>📱 Kontak</h4>
-                  <ul class="footer-links">
-                    <li><a href="https://github.com/martin0102-jpg"><span class="material-symbols-rounded">code</span>Github</a></li>
-                    <li><a href=""><span class="material-symbols-rounded">email</span>Email</a></li>
-                    <li><a href="https://www.instagram.com/mrtnn1_?igsh=cXdwOGR6NDZrcHBi"><span class="material-symbols-rounded">photo_camera</span>Instagram</a></li>
-                    <li><a href="https://www.linkedin.com/in/martin-nurhidayat-4ba435304?utm_source=share_via&utm_content=profile&utm_medium=member_android"><span class="material-symbols-rounded">work</span>Linkedin</a></li>
+                <ul class="footer-links">
+                    <li><a href="https://github.com/martin0102-jpg" target="_blank"><span class="material-symbols-rounded">code</span> Github</a></li>
+                    <li><a href="mailto:email@example.com"><span class="material-symbols-rounded">email</span> Email</a></li>
+                    <li><a href="https://www.instagram.com/mrtnn1_?igsh=cXdwOGR6NDZrcHBi" target="_blank"><span class="material-symbols-rounded">photo_camera</span> Instagram</a></li>
+                    <li><a href="https://www.linkedin.com/in/martin-nurhidayat-4ba435304?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank"><span class="material-symbols-rounded">work</span> Linkedin</a></li>
                 </ul>
             </div>
         </div>
@@ -335,9 +355,9 @@
         <div class="footer-bottom">
             <p>© 2026 MahaMate. Dibangun dengan 💙 oleh Tim MahaMate</p>
         </div>
-     </footer>
+    </footer>
 
-    <!-- TOAST -->
+    <!-- ===== TOAST ===== -->
     <div id="toastContainer">
         <div id="toastMessage">Notifikasi</div>
     </div>

@@ -1,16 +1,20 @@
 // ============================================================
 // PROGRAM TUGAS - MAHAMATE
 // ============================================================
-// 1. UTILITY FUNCTIONS
-// 2. DATA FUNCTIONS (LocalStorage)
-// 3. DOM FUNCTIONS (Render UI)
-// 4. LOGIC FUNCTIONS
-// 5. EVENT LISTENERS
-// 6. INITIALIZATION
+
+console.log('🔧 Inisialisasi Program Tugas...');
+
+// ============================================================
+// 1. KONFIGURASI
 // ============================================================
 
+const API_URL = 'http://localhost:3000/api/tugas';
 
-// ===== 1a. SIDEBAR TOGGLE =====
+// ============================================================
+// 2. SIDEBAR & NAVBAR FUNCTIONS
+// ============================================================
+
+// ===== 2a. SIDEBAR TOGGLE =====
 var sidebar = document.getElementById('sidebar');
 var sidebarOverlay = document.getElementById('sidebarOverlay');
 var menuToggle = document.getElementById('menuToggle');
@@ -48,7 +52,7 @@ if (sidebarOverlay) {
     sidebarOverlay.addEventListener('click', closeSidebar);
 }
 
-// ===== 1b. DROPDOWN TOGGLE (Sidebar) =====
+// ===== 2b. DROPDOWN TOGGLE =====
 var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
 dropdownToggles.forEach(function(toggle) {
@@ -75,7 +79,7 @@ dropdownToggles.forEach(function(toggle) {
     });
 });
 
-// ===== 1c. THEME TOGGLE =====
+// ===== 2c. THEME TOGGLE =====
 var themeToggle = document.getElementById('themeToggle');
 var themeIcon = document.getElementById('themeIcon');
 var isDark = localStorage.getItem('theme') === 'dark';
@@ -103,13 +107,13 @@ if (themeToggle) {
     });
 }
 
-// ===== 1d. LOGIN STATE =====
+// ===== 2d. LOGIN STATE =====
 function isLoggedIn() {
     return localStorage.getItem('mahamate_session') !== null;
 }
 
 function getCurrentUser() {
-    var session = localStorage.getItem('mahamate_session'); // ← PAKAI TANDA PETIK!
+    var session = localStorage.getItem('mahamate_session');
     if (!session) return null;
     try {
         return JSON.parse(session);
@@ -141,7 +145,7 @@ function updateUIForLogin() {
     }
 }
 
-// ===== 1e. LOGOUT POPUP =====
+// ===== 2e. LOGOUT POPUP =====
 var logoutOverlay = document.getElementById('logoutOverlay');
 var logoutCancel = document.getElementById('logoutCancel');
 var logoutConfirm = document.getElementById('logoutConfirm');
@@ -181,19 +185,19 @@ if (logoutOverlay) {
     });
 }
 
-// ===== 1f. LOGIN ICON CLICK (Navbar) =====
+// ===== 2f. LOGIN ICON CLICK =====
 var btnLoginIcon = document.getElementById('btnLoginIcon');
 if (btnLoginIcon) {
     btnLoginIcon.addEventListener('click', function() {
         if (isLoggedIn()) {
             showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
         } else {
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../dashboard/dashboard.html';
         }
     });
 }
 
-// ===== 1g. LOGOUT FROM SIDEBAR =====
+// ===== 2g. LOGOUT FROM SIDEBAR =====
 var btnLogout = document.getElementById('btnLogout');
 if (btnLogout) {
     btnLogout.addEventListener('click', function(e) {
@@ -202,7 +206,7 @@ if (btnLogout) {
     });
 }
 
-// ===== 1h. PROFILE LINK =====
+// ===== 2h. PROFILE LINK =====
 var profileLink = document.getElementById('profileLink');
 if (profileLink) {
     profileLink.addEventListener('click', function(e) {
@@ -210,17 +214,26 @@ if (profileLink) {
         if (isLoggedIn()) {
             showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
         } else {
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../dashboard/dashboard.html';
         }
     });
 }
 
-// ===== 1i. UPDATE UI SAAT LOAD =====
+// ===== 2i. UPDATE UI SAAT LOAD =====
 updateUIForLogin();
 
+// ===== 2j. AKTIFKAN MENU =====
+document.querySelectorAll('.dropdown-link.active').forEach(function(link) {
+    var parent = link.closest('.sidebar-item');
+    if (parent) {
+        parent.classList.add('open');
+    }
+});
+
+console.log('✅ Sidebar & Navbar siap!');
 
 // ============================================================
-// 1. UTILITY FUNCTIONS
+// 3. UTILITY FUNCTIONS
 // ============================================================
 
 function formatTanggal(dateStr) {
@@ -250,23 +263,62 @@ function isDeadlineOverdue(deadline) {
     return deadlineDate < today;
 }
 
-function showToast(message) {
+function showToast(message, type) {
     var toast = document.getElementById('toastMessage');
+    if (!toast) {
+        var container = document.getElementById('toastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.style.cssText = 'position:fixed;bottom:30px;right:30px;z-index:9999;';
+            document.body.appendChild(container);
+        }
+        toast = document.createElement('div');
+        toast.id = 'toastMessage';
+        toast.style.cssText = 'background:#151A2D;color:#fff;padding:14px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;box-shadow:0 8px 30px rgba(0,0,0,0.2);border-left:4px solid #00C2FF;max-width:400px;display:none;opacity:0;transition:opacity 0.3s ease;';
+        container.appendChild(toast);
+    }
+    
     toast.textContent = message;
     toast.className = 'show';
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
     
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(function() {
-        toast.className = '';
+        toast.style.opacity = '0';
+        setTimeout(function() {
+            toast.style.display = 'none';
+        }, 300);
     }, 2500);
 }
 
+function getStatusClass(status) {
+    var classes = {
+        'Belum Mulai': 'status-belum',
+        'Sedang Dikerjakan': 'status-proses',
+        'Selesai': 'status-selesai'
+    };
+    return classes[status] || 'status-belum';
+}
+
+function getStatusColor(status) {
+    var colors = {
+        'Belum Mulai': '#6c757d',
+        'Sedang Dikerjakan': '#ffc107',
+        'Selesai': '#28a745'
+    };
+    return colors[status] || '#6c757d';
+}
+
 // ============================================================
-// 2. DATA FUNCTIONS (LocalStorage)
+// 4. DATA FUNCTIONS
 // ============================================================
 
+// ===== 4a. STORAGE KEY =====
 var STORAGE_KEY = 'tugas_data';
 
+// ===== 4b. LOAD DATA =====
 function loadData() {
     var data = localStorage.getItem(STORAGE_KEY);
     if (!data) return { tugas: [] };
@@ -277,41 +329,15 @@ function loadData() {
     }
 }
 
+// ===== 4c. SAVE DATA =====
 function saveData(data) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    console.log('💾 Data tugas disimpan');
 }
 
 // ============================================================
-// 3. DOM FUNCTIONS (Render UI)
+// 5. DOM FUNCTIONS
 // ============================================================
-
-function renderMenuUtama() {
-    document.getElementById('menuUtama').classList.remove('hidden');
-    document.getElementById('formKerja').classList.add('hidden');
-}
-
-function renderFormKerja(mode) {
-    document.getElementById('menuUtama').classList.add('hidden');
-    document.getElementById('formKerja').classList.remove('hidden');
-    
-    var title = document.getElementById('formTitle');
-    if (mode === 'mode1') {
-        title.textContent = '📋 Mode: Daftar Tugas Aktif';
-    } else {
-        title.textContent = '✅ Mode: Tugas Selesai';
-    }
-    
-    document.getElementById('formKerja').dataset.mode = mode;
-    
-    // Reset form
-    document.getElementById('inputJudul').value = '';
-    document.getElementById('inputDeskripsi').value = '';
-    document.getElementById('inputDeadline').value = getToday();
-    document.getElementById('inputPrioritas').value = 'Sedang';
-    document.getElementById('inputKategori').value = 'Pribadi';
-    
-    renderAll();
-}
 
 function renderStats(data) {
     var total = data.tugas.length;
@@ -329,16 +355,8 @@ function renderStats(data) {
 
 function renderTabel(data, filterKategori, filterPrioritas, filterStatus, sortBy) {
     var tbody = document.getElementById('tabelBody');
-    var mode = document.getElementById('formKerja').dataset.mode;
     
     var tugasList = data.tugas || [];
-    
-    // Filter berdasarkan mode
-    if (mode === 'mode1') {
-        tugasList = tugasList.filter(function(t) { return t.status !== 'Selesai'; });
-    } else if (mode === 'mode2') {
-        tugasList = tugasList.filter(function(t) { return t.status === 'Selesai'; });
-    }
     
     // Filter kategori
     if (filterKategori && filterKategori !== 'semua') {
@@ -373,7 +391,7 @@ function renderTabel(data, filterKategori, filterPrioritas, filterStatus, sortBy
     }
     
     if (tugasList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Tidak ada tugas</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Tidak ada tugas</td></tr>';
         return;
     }
     
@@ -383,43 +401,30 @@ function renderTabel(data, filterKategori, filterPrioritas, filterStatus, sortBy
         if (tugas.prioritas === 'Sedang') priorityClass = 'priority-sedang';
         if (tugas.prioritas === 'Tinggi') priorityClass = 'priority-tinggi';
         
-        var statusClass = 'status-belum';
-        if (tugas.status === 'Sedang Dikerjakan') statusClass = 'status-proses';
-        if (tugas.status === 'Selesai') statusClass = 'status-selesai';
-        if (tugas.status !== 'Selesai' && isDeadlineOverdue(tugas.deadline)) statusClass = 'status-terlambat';
+        var statusClass = getStatusClass(tugas.status);
+        if (tugas.status !== 'Selesai' && isDeadlineOverdue(tugas.deadline)) {
+            statusClass = 'status-terlambat';
+        }
         
         html += `
-            <tr>
+            <tr class="clickable-row" data-id="${tugas.id}">
                 <td>${index + 1}</td>
                 <td><strong>${tugas.judul || '-'}</strong></td>
                 <td>${tugas.kategori || '-'}</td>
                 <td><span class="${priorityClass}">${tugas.prioritas || '-'}</span></td>
                 <td>${formatTanggal(tugas.deadline)}</td>
                 <td><span class="${statusClass}">${tugas.status || 'Belum Mulai'}</span></td>
-                <td>
-                    <div style="display:flex;gap:4px;">
-                        ${tugas.status !== 'Selesai' ? `<button class="btn-selesai" data-id="${tugas.id}" title="Tandai Selesai">✅</button>` : ''}
-                        <button class="btn-hapus" data-id="${tugas.id}" title="Hapus">🗑</button>
-                    </div>
-                </td>
             </tr>
         `;
     });
     
     tbody.innerHTML = html;
     
-    // Event listeners
-    tbody.querySelectorAll('.btn-selesai').forEach(function(btn) {
-        btn.addEventListener('click', function() {
+    // Event listener untuk klik baris (buka preview)
+    tbody.querySelectorAll('.clickable-row').forEach(function(row) {
+        row.addEventListener('click', function() {
             var id = this.dataset.id;
-            tandaiSelesai(id);
-        });
-    });
-    
-    tbody.querySelectorAll('.btn-hapus').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var id = this.dataset.id;
-            hapusTugas(id);
+            openPreview(id);
         });
     });
 }
@@ -436,7 +441,50 @@ function renderAll() {
 }
 
 // ============================================================
-// 4. LOGIC FUNCTIONS
+// 6. PREVIEW POPUP
+// ============================================================
+
+function openPreview(id) {
+    var data = loadData();
+    var tugas = data.tugas.find(function(t) { return t.id === id; });
+    
+    if (!tugas) {
+        showToast('Tugas tidak ditemukan', 'danger');
+        return;
+    }
+    
+    // Isi data preview
+    document.getElementById('previewJudul').textContent = tugas.judul || '-';
+    document.getElementById('previewDeskripsi').textContent = tugas.deskripsi || '-';
+    document.getElementById('previewKategori').textContent = tugas.kategori || '-';
+    document.getElementById('previewPrioritas').textContent = tugas.prioritas || '-';
+    document.getElementById('previewDeadline').textContent = formatTanggal(tugas.deadline);
+    document.getElementById('previewStatus').textContent = tugas.status || 'Belum Mulai';
+    document.getElementById('previewStatus').style.color = getStatusColor(tugas.status);
+    document.getElementById('previewCreated').textContent = tugas.createdAt ? formatTanggal(tugas.createdAt.split('T')[0]) : '-';
+    
+    // Tombol "Selesai" hanya jika belum selesai
+    var btnSelesai = document.getElementById('btnPreviewSelesai');
+    if (tugas.status === 'Selesai') {
+        btnSelesai.style.display = 'none';
+    } else {
+        btnSelesai.style.display = 'inline-flex';
+        btnSelesai.dataset.id = tugas.id;
+    }
+    
+    document.getElementById('btnPreviewHapus').dataset.id = tugas.id;
+    
+    document.getElementById('previewOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePreview() {
+    document.getElementById('previewOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ============================================================
+// 7. LOGIC FUNCTIONS
 // ============================================================
 
 function tambahTugas() {
@@ -447,7 +495,7 @@ function tambahTugas() {
     var deadline = document.getElementById('inputDeadline').value;
     
     if (!judul) {
-        showToast('Judul tugas harus diisi!');
+        showToast('Judul tugas harus diisi!', 'danger');
         return;
     }
     
@@ -472,7 +520,7 @@ function tambahTugas() {
     document.getElementById('inputDeskripsi').value = '';
     document.getElementById('inputDeadline').value = getToday();
     
-    showToast('✅ Tugas berhasil ditambahkan!');
+    showToast('✅ Tugas berhasil ditambahkan!', 'success');
 }
 
 function tandaiSelesai(id) {
@@ -484,7 +532,8 @@ function tandaiSelesai(id) {
         tugas.status = 'Selesai';
         saveData(data);
         renderAll();
-        showToast('✅ Tugas ditandai selesai!');
+        closePreview();
+        showToast('✅ Tugas ditandai selesai!', 'success');
     }
 }
 
@@ -497,53 +546,77 @@ function hapusTugas(id) {
     data.tugas = data.tugas.filter(function(t) { return t.id !== id; });
     saveData(data);
     renderAll();
-    showToast('🗑 Tugas dihapus');
+    closePreview();
+    showToast('🗑 Tugas dihapus', 'warning');
 }
 
 // ============================================================
-// 5. EVENT LISTENERS
+// 8. EVENT LISTENERS
 // ============================================================
 
-// Menu Utama
-document.getElementById('btnMode1').addEventListener('click', function() {
-    renderFormKerja('mode1');
-});
-
-document.getElementById('btnMode2').addEventListener('click', function() {
-    renderFormKerja('mode2');
-});
-
-// Kembali ke Menu
-document.getElementById('btnKembaliMenu').addEventListener('click', function() {
-    renderMenuUtama();
-});
-
-// Tambah Tugas
+// ===== TAMBAH TUGAS =====
 document.getElementById('btnTambahTugas').addEventListener('click', function() {
     tambahTugas();
 });
 
-// Enter key untuk tambah tugas
+// ===== ENTER KEY UNTUK TAMBAH TUGAS =====
 document.getElementById('inputJudul').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         tambahTugas();
     }
 });
 
-// Filter & Sort
+// ===== FILTER & SORT =====
 document.getElementById('filterKategori').addEventListener('change', renderAll);
 document.getElementById('filterPrioritas').addEventListener('change', renderAll);
 document.getElementById('filterStatus').addEventListener('change', renderAll);
 document.getElementById('sortBy').addEventListener('change', renderAll);
 
+// ===== PREVIEW POPUP - CLOSE =====
+document.getElementById('previewClose').addEventListener('click', closePreview);
+document.getElementById('previewOverlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePreview();
+    }
+});
+
+// ===== PREVIEW POPUP - TOMBOL SELESAI =====
+document.getElementById('btnPreviewSelesai').addEventListener('click', function() {
+    var id = this.dataset.id;
+    if (id) {
+        tandaiSelesai(id);
+    }
+});
+
+// ===== PREVIEW POPUP - TOMBOL HAPUS =====
+document.getElementById('btnPreviewHapus').addEventListener('click', function() {
+    var id = this.dataset.id;
+    if (id) {
+        hapusTugas(id);
+    }
+});
+
+// ===== ESC UNTUK TUTUP PREVIEW =====
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePreview();
+        closeLogoutPopup();
+    }
+});
+
 // ============================================================
-// 6. INITIALIZATION
+// 9. INITIALIZATION
 // ============================================================
 
 function init() {
     document.getElementById('inputDeadline').value = getToday();
-    renderMenuUtama();
+    
+    // LANGSUNG RENDER TANPA MENU
+    renderAll();
+    
     console.log('🚀 MahaMate - Program Tugas siap digunakan!');
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+console.log('✅ Semua fungsi siap digunakan!');

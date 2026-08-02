@@ -1,17 +1,20 @@
 // ============================================================
 // PROGRAM KEGIATAN - MAHAMATE
 // ============================================================
-// 1. UTILITY FUNCTIONS
-// 2. DATA FUNCTIONS (LocalStorage)
-// 3. DOM FUNCTIONS (Render UI)
-// 4. LOGIC FUNCTIONS
-// 5. EVENT LISTENERS
-// 6. INITIALIZATION
+
+console.log('🔧 Inisialisasi Program Kegiatan...');
+
+// ============================================================
+// 1. KONFIGURASI
 // ============================================================
 
+const API_URL = 'http://localhost:3000/api/kegiatan';
 
+// ============================================================
+// 2. SIDEBAR & NAVBAR FUNCTIONS
+// ============================================================
 
-// ===== 1a. SIDEBAR TOGGLE =====
+// ===== 2a. SIDEBAR TOGGLE =====
 var sidebar = document.getElementById('sidebar');
 var sidebarOverlay = document.getElementById('sidebarOverlay');
 var menuToggle = document.getElementById('menuToggle');
@@ -49,7 +52,7 @@ if (sidebarOverlay) {
     sidebarOverlay.addEventListener('click', closeSidebar);
 }
 
-// ===== 1b. DROPDOWN TOGGLE (Sidebar) =====
+// ===== 2b. DROPDOWN TOGGLE =====
 var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
 dropdownToggles.forEach(function(toggle) {
@@ -76,7 +79,7 @@ dropdownToggles.forEach(function(toggle) {
     });
 });
 
-// ===== 1c. THEME TOGGLE =====
+// ===== 2c. THEME TOGGLE =====
 var themeToggle = document.getElementById('themeToggle');
 var themeIcon = document.getElementById('themeIcon');
 var isDark = localStorage.getItem('theme') === 'dark';
@@ -104,13 +107,13 @@ if (themeToggle) {
     });
 }
 
-// ===== 1d. LOGIN STATE =====
+// ===== 2d. LOGIN STATE =====
 function isLoggedIn() {
     return localStorage.getItem('mahamate_session') !== null;
 }
 
 function getCurrentUser() {
-    var session = localStorage.getItem('mahamate_session'); // ← PAKAI TANDA PETIK!
+    var session = localStorage.getItem('mahamate_session');
     if (!session) return null;
     try {
         return JSON.parse(session);
@@ -142,7 +145,7 @@ function updateUIForLogin() {
     }
 }
 
-// ===== 1e. LOGOUT POPUP =====
+// ===== 2e. LOGOUT POPUP =====
 var logoutOverlay = document.getElementById('logoutOverlay');
 var logoutCancel = document.getElementById('logoutCancel');
 var logoutConfirm = document.getElementById('logoutConfirm');
@@ -182,19 +185,19 @@ if (logoutOverlay) {
     });
 }
 
-// ===== 1f. LOGIN ICON CLICK (Navbar) =====
+// ===== 2f. LOGIN ICON CLICK =====
 var btnLoginIcon = document.getElementById('btnLoginIcon');
 if (btnLoginIcon) {
     btnLoginIcon.addEventListener('click', function() {
         if (isLoggedIn()) {
             showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
         } else {
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../dashboard/dashboard.html';
         }
     });
 }
 
-// ===== 1g. LOGOUT FROM SIDEBAR =====
+// ===== 2g. LOGOUT FROM SIDEBAR =====
 var btnLogout = document.getElementById('btnLogout');
 if (btnLogout) {
     btnLogout.addEventListener('click', function(e) {
@@ -203,7 +206,7 @@ if (btnLogout) {
     });
 }
 
-// ===== 1h. PROFILE LINK =====
+// ===== 2h. PROFILE LINK =====
 var profileLink = document.getElementById('profileLink');
 if (profileLink) {
     profileLink.addEventListener('click', function(e) {
@@ -211,18 +214,26 @@ if (profileLink) {
         if (isLoggedIn()) {
             showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
         } else {
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../dashboard/dashboard.html';
         }
     });
 }
 
-// ===== 1i. UPDATE UI SAAT LOAD =====
+// ===== 2i. UPDATE UI SAAT LOAD =====
 updateUIForLogin();
 
+// ===== 2j. AKTIFKAN MENU =====
+document.querySelectorAll('.dropdown-link.active').forEach(function(link) {
+    var parent = link.closest('.sidebar-item');
+    if (parent) {
+        parent.classList.add('open');
+    }
+});
 
+console.log('✅ Sidebar & Navbar siap!');
 
 // ============================================================
-// 1. UTILITY FUNCTIONS
+// 3. UTILITY FUNCTIONS
 // ============================================================
 
 function formatTanggal(dateStr) {
@@ -243,57 +254,72 @@ function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
-function isActivityActive(kegiatan) {
-    if (!kegiatan.tanggalMulai) return false;
-    if (kegiatan.status === 'Selesai' || kegiatan.status === 'Dibatalkan') return false;
-    
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
-    var mulai = new Date(kegiatan.tanggalMulai);
-    mulai.setHours(0, 0, 0, 0);
-    
-    return mulai <= today;
-}
-
-function isUpcoming(kegiatan) {
-    if (!kegiatan.tanggalMulai) return false;
-    if (kegiatan.status === 'Selesai' || kegiatan.status === 'Dibatalkan') return false;
-    
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
-    var mulai = new Date(kegiatan.tanggalMulai);
-    mulai.setHours(0, 0, 0, 0);
-    
-    return mulai > today;
-}
-
-function getDaysUntil(dateStr) {
-    if (!dateStr) return 0;
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
-    var target = new Date(dateStr);
-    target.setHours(0, 0, 0, 0);
-    var diffTime = target - today;
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-}
-
-function showToast(message) {
+function showToast(message, type) {
     var toast = document.getElementById('toastMessage');
+    if (!toast) {
+        var container = document.getElementById('toastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.style.cssText = 'position:fixed;bottom:30px;right:30px;z-index:9999;';
+            document.body.appendChild(container);
+        }
+        toast = document.createElement('div');
+        toast.id = 'toastMessage';
+        toast.style.cssText = 'background:#151A2D;color:#fff;padding:14px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;box-shadow:0 8px 30px rgba(0,0,0,0.2);border-left:4px solid #00C2FF;max-width:400px;display:none;opacity:0;transition:opacity 0.3s ease;';
+        container.appendChild(toast);
+    }
+    
     toast.textContent = message;
     toast.className = 'show';
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
     
     clearTimeout(toast._timeout);
     toast._timeout = setTimeout(function() {
-        toast.className = '';
+        toast.style.opacity = '0';
+        setTimeout(function() {
+            toast.style.display = 'none';
+        }, 300);
     }, 2500);
 }
 
+function getStatusClass(status) {
+    var classes = {
+        'Rencana': 'status-rencana',
+        'Berlangsung': 'status-berlangsung',
+        'Selesai': 'status-selesai',
+        'Dibatalkan': 'status-dibatalkan'
+    };
+    return classes[status] || 'status-rencana';
+}
+
+function getStatusColor(status) {
+    var colors = {
+        'Rencana': '#004085',
+        'Berlangsung': '#856404',
+        'Selesai': '#155724',
+        'Dibatalkan': '#721c24'
+    };
+    return colors[status] || '#004085';
+}
+
+function getNextStatus(status) {
+    var statusList = ['Rencana', 'Berlangsung', 'Selesai', 'Dibatalkan'];
+    var currentIndex = statusList.indexOf(status);
+    if (currentIndex === -1) return 'Rencana';
+    var nextIndex = (currentIndex + 1) % statusList.length;
+    return statusList[nextIndex];
+}
+
 // ============================================================
-// 2. DATA FUNCTIONS (LocalStorage)
+// 4. DATA FUNCTIONS
 // ============================================================
 
+// ===== 4a. STORAGE KEY =====
 var STORAGE_KEY = 'kegiatan_data';
 
+// ===== 4b. LOAD DATA =====
 function loadData() {
     var data = localStorage.getItem(STORAGE_KEY);
     if (!data) return { kegiatan: [] };
@@ -304,200 +330,34 @@ function loadData() {
     }
 }
 
+// ===== 4c. SAVE DATA =====
 function saveData(data) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    console.log('💾 Data kegiatan disimpan');
 }
 
 // ============================================================
-// 3. DOM FUNCTIONS (Render UI)
+// 5. DOM FUNCTIONS
 // ============================================================
-
-function renderMenuUtama() {
-    document.getElementById('menuUtama').classList.remove('hidden');
-    document.getElementById('formKerja').classList.add('hidden');
-}
-
-function renderFormKerja(mode) {
-    document.getElementById('menuUtama').classList.add('hidden');
-    document.getElementById('formKerja').classList.remove('hidden');
-    
-    var title = document.getElementById('formTitle');
-    if (mode === 'mode1') {
-        title.textContent = '📅 Mode: Kegiatan Aktif';
-    } else {
-        title.textContent = '✅ Mode: Kegiatan Selesai';
-    }
-    
-    document.getElementById('formKerja').dataset.mode = mode;
-    
-    // Reset form
-    document.getElementById('inputNama').value = '';
-    document.getElementById('inputLokasi').value = '';
-    document.getElementById('inputDeskripsi').value = '';
-    document.getElementById('inputMulai').value = getToday();
-    document.getElementById('inputSelesai').value = getToday();
-    
-    renderAll();
-}
 
 function renderStats(data) {
     var total = data.kegiatan.length;
     var selesai = data.kegiatan.filter(function(k) { return k.status === 'Selesai'; }).length;
-    var berlangsung = data.kegiatan.filter(function(k) { 
-        return k.status === 'Berlangsung' || (isActivityActive(k) && k.status !== 'Selesai' && k.status !== 'Dibatalkan');
+    var aktif = data.kegiatan.filter(function(k) { 
+        return k.status === 'Berlangsung';
     }).length;
     var rencana = data.kegiatan.filter(function(k) { 
-        return k.status === 'Rencana' || isUpcoming(k);
+        return k.status === 'Rencana';
     }).length;
     
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statSelesai').textContent = selesai;
-    document.getElementById('statBerlangsung').textContent = berlangsung;
+    document.getElementById('statAktif').textContent = aktif;
     document.getElementById('statRencana').textContent = rencana;
 }
 
-function renderUpcoming(data) {
-    var container = document.getElementById('upcomingList');
-    var mode = document.getElementById('formKerja').dataset.mode;
-    
-    var kegiatanList = data.kegiatan || [];
-    
-    // Filter berdasarkan mode
-    if (mode === 'mode1') {
-        kegiatanList = kegiatanList.filter(function(k) { 
-            return k.status !== 'Selesai' && k.status !== 'Dibatalkan';
-        });
-    } else if (mode === 'mode2') {
-        kegiatanList = kegiatanList.filter(function(k) { 
-            return k.status === 'Selesai';
-        });
-    }
-    
-    // Ambil kegiatan mendatang
-    var upcoming = kegiatanList.filter(function(k) {
-        return isUpcoming(k);
-    });
-    
-    // Sort by tanggal mulai
-    upcoming.sort(function(a, b) {
-        return a.tanggalMulai.localeCompare(b.tanggalMulai);
-    });
-    
-    // Ambil 5 terdekat
-    upcoming = upcoming.slice(0, 5);
-    
-    if (upcoming.length === 0) {
-        container.innerHTML = '<p class="text-muted">Tidak ada kegiatan mendatang</p>';
-        return;
-    }
-    
-    var html = '';
-    upcoming.forEach(function(k) {
-        var days = getDaysUntil(k.tanggalMulai);
-        var badgeText = days <= 3 ? '⚠️ Segera!' : days + ' hari lagi';
-        var badgeClass = days <= 3 ? 'upcoming-badge urgent' : 'upcoming-badge';
-        
-        html += `
-            <div class="upcoming-item">
-                <span class="upcoming-name">${k.nama || 'Tanpa nama'}</span>
-                <span class="upcoming-date">${formatTanggal(k.tanggalMulai)}</span>
-                <span class="upcoming-badge">${badgeText}</span>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
-
-function renderTabel(data, filterStatus, filterLokasi) {
-    var tbody = document.getElementById('tabelBody');
-    var mode = document.getElementById('formKerja').dataset.mode;
-    
-    var kegiatanList = data.kegiatan || [];
-    
-    // Filter berdasarkan mode
-    if (mode === 'mode1') {
-        kegiatanList = kegiatanList.filter(function(k) { 
-            return k.status !== 'Selesai' && k.status !== 'Dibatalkan';
-        });
-    } else if (mode === 'mode2') {
-        kegiatanList = kegiatanList.filter(function(k) { 
-            return k.status === 'Selesai';
-        });
-    }
-    
-    // Filter status
-    if (filterStatus && filterStatus !== 'semua') {
-        kegiatanList = kegiatanList.filter(function(k) { return k.status === filterStatus; });
-    }
-    
-    // Filter lokasi
-    if (filterLokasi && filterLokasi !== 'semua') {
-        kegiatanList = kegiatanList.filter(function(k) { return k.lokasi === filterLokasi; });
-    }
-    
-    if (kegiatanList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Tidak ada kegiatan</td></tr>';
-        return;
-    }
-    
-    var html = '';
-    kegiatanList.forEach(function(kegiatan, index) {
-        var statusClass = 'status-rencana';
-        if (kegiatan.status === 'Berlangsung') statusClass = 'status-berlangsung';
-        if (kegiatan.status === 'Selesai') statusClass = 'status-selesai';
-        if (kegiatan.status === 'Dibatalkan') statusClass = 'status-dibatalkan';
-        
-        html += `
-            <tr>
-                <td>${index + 1}</td>
-                <td><strong>${kegiatan.nama || '-'}</strong></td>
-                <td>${kegiatan.lokasi || '-'}</td>
-                <td>${formatTanggal(kegiatan.tanggalMulai)}</td>
-                <td>${formatTanggal(kegiatan.tanggalSelesai)}</td>
-                <td><span class="${statusClass}">${kegiatan.status || 'Rencana'}</span></td>
-                <td>
-                    <div style="display:flex;gap:4px;">
-                        ${kegiatan.status !== 'Selesai' ? `<button class="btn-ubah-status" data-id="${kegiatan.id}" title="Ubah Status">🔄</button>` : ''}
-                        <button class="btn-hapus" data-id="${kegiatan.id}" title="Hapus">🗑</button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    });
-    
-    tbody.innerHTML = html;
-    
-    // Event listeners
-    tbody.querySelectorAll('.btn-ubah-status').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var id = this.dataset.id;
-            ubahStatusKegiatan(id);
-        });
-    });
-    
-    tbody.querySelectorAll('.btn-hapus').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var id = this.dataset.id;
-            hapusKegiatan(id);
-        });
-    });
-}
-
-function renderAll() {
+function updateLokasiFilter() {
     var data = loadData();
-    var filterStatus = document.getElementById('filterStatus').value;
-    var filterLokasi = document.getElementById('filterLokasi').value;
-    
-    renderStats(data);
-    renderUpcoming(data);
-    renderTabel(data, filterStatus, filterLokasi);
-    
-    // Update filter lokasi options
-    updateLokasiFilter(data);
-}
-
-function updateLokasiFilter(data) {
     var select = document.getElementById('filterLokasi');
     var lokasiSet = {};
     
@@ -520,8 +380,100 @@ function updateLokasiFilter(data) {
     }
 }
 
+function renderTabel(data, filterStatus, filterLokasi) {
+    var tbody = document.getElementById('tabelBody');
+    
+    var kegiatanList = data.kegiatan || [];
+    
+    // Filter status
+    if (filterStatus && filterStatus !== 'semua') {
+        kegiatanList = kegiatanList.filter(function(k) { return k.status === filterStatus; });
+    }
+    
+    // Filter lokasi
+    if (filterLokasi && filterLokasi !== 'semua') {
+        kegiatanList = kegiatanList.filter(function(k) { return k.lokasi === filterLokasi; });
+    }
+    
+    if (kegiatanList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Tidak ada kegiatan</td></tr>';
+        return;
+    }
+    
+    var html = '';
+    kegiatanList.forEach(function(kegiatan, index) {
+        var statusClass = getStatusClass(kegiatan.status);
+        
+        html += `
+            <tr class="clickable-row" data-id="${kegiatan.id}">
+                <td>${index + 1}</td>
+                <td><strong>${kegiatan.nama || '-'}</strong></td>
+                <td>${kegiatan.lokasi || '-'}</td>
+                <td>${formatTanggal(kegiatan.tanggalMulai)}</td>
+                <td>${kegiatan.tanggalSelesai ? formatTanggal(kegiatan.tanggalSelesai) : '-'}</td>
+                <td><span class="${statusClass}">${kegiatan.status || 'Rencana'}</span></td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+    
+    // Event listener untuk klik baris (buka preview)
+    tbody.querySelectorAll('.clickable-row').forEach(function(row) {
+        row.addEventListener('click', function() {
+            var id = this.dataset.id;
+            openPreview(id);
+        });
+    });
+}
+
+function renderAll() {
+    var data = loadData();
+    var filterStatus = document.getElementById('filterStatus').value;
+    var filterLokasi = document.getElementById('filterLokasi').value;
+    
+    renderStats(data);
+    renderTabel(data, filterStatus, filterLokasi);
+    updateLokasiFilter();
+}
+
 // ============================================================
-// 4. LOGIC FUNCTIONS
+// 6. PREVIEW POPUP
+// ============================================================
+
+function openPreview(id) {
+    var data = loadData();
+    var kegiatan = data.kegiatan.find(function(k) { return k.id === id; });
+    
+    if (!kegiatan) {
+        showToast('Kegiatan tidak ditemukan', 'danger');
+        return;
+    }
+    
+    // Isi data preview
+    document.getElementById('previewNama').textContent = kegiatan.nama || '-';
+    document.getElementById('previewDeskripsi').textContent = kegiatan.deskripsi || '-';
+    document.getElementById('previewLokasi').textContent = kegiatan.lokasi || '-';
+    document.getElementById('previewMulai').textContent = formatTanggal(kegiatan.tanggalMulai);
+    document.getElementById('previewSelesai').textContent = kegiatan.tanggalSelesai ? formatTanggal(kegiatan.tanggalSelesai) : '-';
+    document.getElementById('previewStatus').textContent = kegiatan.status || 'Rencana';
+    document.getElementById('previewStatus').style.color = getStatusColor(kegiatan.status);
+    document.getElementById('previewCreated').textContent = kegiatan.createdAt ? formatTanggal(kegiatan.createdAt.split('T')[0]) : '-';
+    
+    document.getElementById('btnPreviewStatus').dataset.id = kegiatan.id;
+    document.getElementById('btnPreviewHapus').dataset.id = kegiatan.id;
+    
+    document.getElementById('previewOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePreview() {
+    document.getElementById('previewOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ============================================================
+// 7. LOGIC FUNCTIONS
 // ============================================================
 
 function tambahKegiatan() {
@@ -532,12 +484,12 @@ function tambahKegiatan() {
     var tanggalSelesai = document.getElementById('inputSelesai').value;
     
     if (!nama) {
-        showToast('Nama kegiatan harus diisi!');
+        showToast('Nama kegiatan harus diisi!', 'danger');
         return;
     }
     
     if (!tanggalMulai) {
-        showToast('Tanggal mulai harus diisi!');
+        showToast('Tanggal mulai harus diisi!', 'danger');
         return;
     }
     
@@ -567,6 +519,7 @@ function tambahKegiatan() {
     
     saveData(data);
     renderAll();
+    updateLokasiFilter();
     
     document.getElementById('inputNama').value = '';
     document.getElementById('inputLokasi').value = '';
@@ -574,7 +527,7 @@ function tambahKegiatan() {
     document.getElementById('inputMulai').value = getToday();
     document.getElementById('inputSelesai').value = getToday();
     
-    showToast('✅ Kegiatan berhasil ditambahkan!');
+    showToast('✅ Kegiatan berhasil ditambahkan!', 'success');
 }
 
 function ubahStatusKegiatan(id) {
@@ -584,16 +537,13 @@ function ubahStatusKegiatan(id) {
     var kegiatan = data.kegiatan.find(function(k) { return k.id === id; });
     if (!kegiatan) return;
     
-    // Status yang tersedia
-    var statusOptions = ['Rencana', 'Berlangsung', 'Selesai', 'Dibatalkan'];
-    var currentIndex = statusOptions.indexOf(kegiatan.status);
-    var nextIndex = (currentIndex + 1) % statusOptions.length;
-    var newStatus = statusOptions[nextIndex];
-    
+    var newStatus = getNextStatus(kegiatan.status);
     kegiatan.status = newStatus;
+    
     saveData(data);
     renderAll();
-    showToast('🔄 Status diubah menjadi: ' + newStatus);
+    closePreview();
+    showToast('🔄 Status diubah menjadi: ' + newStatus, 'info');
 }
 
 function hapusKegiatan(id) {
@@ -605,54 +555,77 @@ function hapusKegiatan(id) {
     data.kegiatan = data.kegiatan.filter(function(k) { return k.id !== id; });
     saveData(data);
     renderAll();
-    showToast('🗑 Kegiatan dihapus');
+    updateLokasiFilter();
+    closePreview();
+    showToast('🗑 Kegiatan dihapus', 'warning');
 }
 
 // ============================================================
-// 5. EVENT LISTENERS
+// 8. EVENT LISTENERS
 // ============================================================
 
-// Menu Utama
-document.getElementById('btnMode1').addEventListener('click', function() {
-    renderFormKerja('mode1');
-});
-
-document.getElementById('btnMode2').addEventListener('click', function() {
-    renderFormKerja('mode2');
-});
-
-// Kembali ke Menu
-document.getElementById('btnKembaliMenu').addEventListener('click', function() {
-    renderMenuUtama();
-});
-
-// Tambah Kegiatan
+// ===== TAMBAH KEGIATAN =====
 document.getElementById('btnTambahKegiatan').addEventListener('click', function() {
     tambahKegiatan();
 });
 
-// Enter key untuk tambah kegiatan
+// ===== ENTER KEY UNTUK TAMBAH KEGIATAN =====
 document.getElementById('inputNama').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         tambahKegiatan();
     }
 });
 
-// Filter
+// ===== FILTER =====
 document.getElementById('filterStatus').addEventListener('change', renderAll);
 document.getElementById('filterLokasi').addEventListener('change', renderAll);
 
+// ===== PREVIEW POPUP - CLOSE =====
+document.getElementById('previewClose').addEventListener('click', closePreview);
+document.getElementById('previewOverlay').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePreview();
+    }
+});
+
+// ===== PREVIEW POPUP - TOMBOL STATUS =====
+document.getElementById('btnPreviewStatus').addEventListener('click', function() {
+    var id = this.dataset.id;
+    if (id) {
+        ubahStatusKegiatan(id);
+    }
+});
+
+// ===== PREVIEW POPUP - TOMBOL HAPUS =====
+document.getElementById('btnPreviewHapus').addEventListener('click', function() {
+    var id = this.dataset.id;
+    if (id) {
+        hapusKegiatan(id);
+    }
+});
+
+// ===== ESC UNTUK TUTUP PREVIEW =====
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closePreview();
+        closeLogoutPopup();
+    }
+});
+
 // ============================================================
-// 6. INITIALIZATION
+// 9. INITIALIZATION
 // ============================================================
 
 function init() {
-    var today = getToday();
-    document.getElementById('inputMulai').value = today;
-    document.getElementById('inputSelesai').value = today;
+    document.getElementById('inputMulai').value = getToday();
+    document.getElementById('inputSelesai').value = getToday();
     
-    renderMenuUtama();
+    // LANGSUNG RENDER TANPA MENU
+    renderAll();
+    
     console.log('🚀 MahaMate - Program Kegiatan siap digunakan!');
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+console.log('✅ Semua fungsi siap digunakan!');

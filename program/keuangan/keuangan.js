@@ -2,13 +2,19 @@
 // PROGRAM KEUANGAN - MAHAMATE
 // ============================================================
 
+console.log('🔧 Inisialisasi Program Keuangan...');
+
 // ============================================================
-// 1. SIDEBAR & NAVBAR FUNCTIONS
+// 1. KONFIGURASI API
 // ============================================================
 
-console.log('🔧 Inisialisasi Sidebar...');
+const API_URL = 'http://localhost:3000/api/keuangan';
 
-// ===== 1a. SIDEBAR TOGGLE =====
+// ============================================================
+// 2. SIDEBAR & NAVBAR FUNCTIONS
+// ============================================================
+
+// ===== 2a. SIDEBAR TOGGLE =====
 var sidebar = document.getElementById('sidebar');
 var sidebarOverlay = document.getElementById('sidebarOverlay');
 var menuToggle = document.getElementById('menuToggle');
@@ -46,7 +52,7 @@ if (sidebarOverlay) {
     sidebarOverlay.addEventListener('click', closeSidebar);
 }
 
-// ===== 1b. DROPDOWN TOGGLE (Sidebar) =====
+// ===== 2b. DROPDOWN TOGGLE =====
 var dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
 dropdownToggles.forEach(function(toggle) {
@@ -73,7 +79,7 @@ dropdownToggles.forEach(function(toggle) {
     });
 });
 
-// ===== 1c. THEME TOGGLE =====
+// ===== 2c. THEME TOGGLE =====
 var themeToggle = document.getElementById('themeToggle');
 var themeIcon = document.getElementById('themeIcon');
 var isDark = localStorage.getItem('theme') === 'dark';
@@ -101,13 +107,13 @@ if (themeToggle) {
     });
 }
 
-// ===== 1d. LOGIN STATE =====
+// ===== 2d. LOGIN STATE =====
 function isLoggedIn() {
     return localStorage.getItem('mahamate_session') !== null;
 }
 
 function getCurrentUser() {
-    var session = localStorage.getItem('mahamate_session'); // ← PAKAI TANDA PETIK!
+    var session = localStorage.getItem('mahamate_session');
     if (!session) return null;
     try {
         return JSON.parse(session);
@@ -139,7 +145,7 @@ function updateUIForLogin() {
     }
 }
 
-// ===== 1e. LOGOUT POPUP =====
+// ===== 2e. LOGOUT POPUP =====
 var logoutOverlay = document.getElementById('logoutOverlay');
 var logoutCancel = document.getElementById('logoutCancel');
 var logoutConfirm = document.getElementById('logoutConfirm');
@@ -179,19 +185,19 @@ if (logoutOverlay) {
     });
 }
 
-// ===== 1f. LOGIN ICON CLICK (Navbar) =====
+// ===== 2f. LOGIN ICON CLICK =====
 var btnLoginIcon = document.getElementById('btnLoginIcon');
 if (btnLoginIcon) {
     btnLoginIcon.addEventListener('click', function() {
         if (isLoggedIn()) {
             showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
         } else {
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../dashboard/dashboard.html';
         }
     });
 }
 
-// ===== 1g. LOGOUT FROM SIDEBAR =====
+// ===== 2g. LOGOUT FROM SIDEBAR =====
 var btnLogout = document.getElementById('btnLogout');
 if (btnLogout) {
     btnLogout.addEventListener('click', function(e) {
@@ -200,7 +206,7 @@ if (btnLogout) {
     });
 }
 
-// ===== 1h. PROFILE LINK =====
+// ===== 2h. PROFILE LINK =====
 var profileLink = document.getElementById('profileLink');
 if (profileLink) {
     profileLink.addEventListener('click', function(e) {
@@ -208,15 +214,15 @@ if (profileLink) {
         if (isLoggedIn()) {
             showToast('👤 Halaman Profile sedang dalam pengembangan', 'info');
         } else {
-            window.location.href = '../../dashboard.html';
+            window.location.href = '../../dashboard/dashboard.html';
         }
     });
 }
 
-// ===== 1i. UPDATE UI SAAT LOAD =====
+// ===== 2i. UPDATE UI SAAT LOAD =====
 updateUIForLogin();
 
-// ===== 1j. AKTIFKAN MENU YANG SEDANG DIBUKA =====
+// ===== 2j. AKTIFKAN MENU =====
 document.querySelectorAll('.dropdown-link.active').forEach(function(link) {
     var parent = link.closest('.sidebar-item');
     if (parent) {
@@ -227,20 +233,14 @@ document.querySelectorAll('.dropdown-link.active').forEach(function(link) {
 console.log('✅ Sidebar & Navbar siap!');
 
 // ============================================================
-// 2. UTILITY FUNCTIONS
+// 3. UTILITY FUNCTIONS
 // ============================================================
 
-/**
- * Format angka menjadi Rupiah
- */
 function formatRupiah(angka) {
     if (!angka || isNaN(angka)) return 'Rp 0';
     return 'Rp ' + angka.toLocaleString('id-ID');
 }
 
-/**
- * Parse string Rupiah menjadi number
- */
 function parseRupiah(str) {
     if (!str) return 0;
     var cleaned = str.replace(/Rp\s?/g, '').replace(/\./g, '');
@@ -248,18 +248,12 @@ function parseRupiah(str) {
     return isNaN(num) ? 0 : num;
 }
 
-/**
- * Format tanggal ke string lokal (DD/MM/YYYY)
- */
 function formatTanggal(dateStr) {
     if (!dateStr) return '-';
     var parts = dateStr.split('-');
     return parts[2] + '/' + parts[1] + '/' + parts[0];
 }
 
-/**
- * Dapatkan tanggal hari ini dalam format YYYY-MM-DD
- */
 function getToday() {
     var today = new Date();
     var year = today.getFullYear();
@@ -268,9 +262,6 @@ function getToday() {
     return year + '-' + month + '-' + day;
 }
 
-/**
- * Hitung selisih hari antara dua tanggal
- */
 function hitungHari(startDate, endDate) {
     if (!startDate) return 0;
     var start = new Date(startDate);
@@ -280,16 +271,6 @@ function hitungHari(startDate, endDate) {
     return diffDays + 1;
 }
 
-/**
- * Buat ID unik untuk setiap item
- */
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
-}
-
-/**
- * Tampilkan toast notification
- */
 function showToast(message, type) {
     var toast = document.getElementById('toastMessage');
     if (!toast) {
@@ -328,39 +309,105 @@ function showToast(message, type) {
 }
 
 // ============================================================
-// 3. DATA FUNCTIONS (LocalStorage)
+// 4. DATA FUNCTIONS
 // ============================================================
 
-function getStorageKey(bulan, tahun) {
-    return 'keuangan_' + bulan + '_' + tahun;
+// ===== 4a. LOCAL STORAGE KEY (dengan mode) =====
+function getStorageKey(bulan, tahun, mode) {
+    return 'keuangan_' + mode + '_' + bulan + '_' + tahun;
 }
 
-function saveData(bulan, tahun, data) {
-    var key = getStorageKey(bulan, tahun);
-    localStorage.setItem(key, JSON.stringify(data));
-    console.log('💾 Data disimpan:', key, data);
+// ===== LOAD DATA DARI API (dengan filter mode) =====
+async function loadDataFromApi(bulan, tahun, mode) {
+    try {
+        // Kirim mode sebagai query parameter
+        const url = `${API_URL}/${bulan}/${tahun}?mode=${mode}`;
+        console.log('📥 Memuat data dari:', url);
+        
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        if (result.success) {
+            console.log('✅ Data diterima:', result.data);
+            return {
+                pengeluaranHarian: result.data.map(function(item) {
+                    return {
+                        id: item.id,
+                        tanggal: item.tanggal,
+                        kategori: item.kategori,
+                        deskripsi: item.deskripsi,
+                        nominal: parseFloat(item.nominal),
+                        mode: item.mode || mode
+                    };
+                }),
+                totalPengeluaran: result.total || 0
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('❌ Error load data from API:', error);
+        showToast('Gagal memuat data dari server', 'danger');
+        return null;
+    }
 }
 
-function loadData(bulan, tahun) {
-    var key = getStorageKey(bulan, tahun);
+// ===== 4c. LOAD DATA DARI LOCALSTORAGE (dengan mode) =====
+function loadLocalData(bulan, tahun, mode) {
+    var key = getStorageKey(bulan, tahun, mode);
     var rawData = localStorage.getItem(key);
     if (!rawData) return null;
     try {
         return JSON.parse(rawData);
     } catch (e) {
-        console.error('❌ Error parsing data:', e);
+        console.error('❌ Error parsing local data:', e);
         return null;
     }
 }
 
-function deleteData(bulan, tahun) {
-    var key = getStorageKey(bulan, tahun);
-    localStorage.removeItem(key);
-    console.log('🗑️ Data dihapus:', key);
+// ===== 4d. SAVE DATA KE LOCALSTORAGE (dengan mode) =====
+function saveLocalData(bulan, tahun, mode, data) {
+    var key = getStorageKey(bulan, tahun, mode);
+    localStorage.setItem(key, JSON.stringify({
+        biayaTetap: data.biayaTetap || [],
+        anggaranAwal: data.anggaranAwal || 0
+    }));
+    console.log('💾 Data biaya tetap & anggaran disimpan untuk mode:', mode);
+}
+
+// ===== 4e. TAMBAH PENGELUARAN KE API (dengan mode) =====
+async function tambahPengeluaranKeAPI(data) {
+    try {
+        console.log('📤 Mengirim data ke API:', data);
+        
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('❌ Error tambah pengeluaran:', error);
+        return { success: false, message: 'Gagal terhubung ke server' };
+    }
+}
+
+// ===== 4f. HAPUS PENGELUARAN DARI API =====
+async function hapusPengeluaranDariAPI(id) {
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('❌ Error hapus pengeluaran:', error);
+        return { success: false, message: 'Gagal terhubung ke server' };
+    }
 }
 
 // ============================================================
-// 4. DOM FUNCTIONS (Render UI)
+// 5. DOM FUNCTIONS (Render UI)
 // ============================================================
 
 function renderMenuUtama() {
@@ -389,6 +436,7 @@ function renderFormKerja(mode) {
         }
     }
     
+    // Reset form
     var tanggal = document.getElementById('inputTanggal');
     if (tanggal) tanggal.value = getToday();
     
@@ -422,7 +470,7 @@ function renderBiayaTetap(biayaTetap) {
     if (!container) return;
     container.innerHTML = '';
     
-    if (!biayaTetap || biayaTetap.length === 0) {
+    if (!biayaTetap || !Array.isArray(biayaTetap) || biayaTetap.length === 0) {
         container.innerHTML = '<div class="empty-state"><p>Belum ada biaya tetap. Klik "Tambah Baris" untuk menambahkan.</p></div>';
         return;
     }
@@ -587,72 +635,128 @@ function renderAll(bulan, tahun, data) {
     renderRingkasan(data, bulan, tahun);
     
     var formKerja = document.getElementById('formKerja');
+    var inputAnggaran = document.getElementById('inputAnggaranAwal');
+    var statusSaldo = document.getElementById('statusSaldoContainer');
+    
     if (formKerja && formKerja.dataset.mode === 'mode2') {
         var anggaranAwal = data.anggaranAwal || 0;
-        var inputAnggaran = document.getElementById('inputAnggaranAwal');
-        if (inputAnggaran) inputAnggaran.value = anggaranAwal > 0 ? formatRupiah(anggaranAwal) : '';
+        if (inputAnggaran) {
+            inputAnggaran.value = anggaranAwal > 0 ? formatRupiah(anggaranAwal) : '';
+        }
         renderStatusSaldo(data, anggaranAwal);
+    } else {
+        if (inputAnggaran) inputAnggaran.value = '';
+        if (statusSaldo) statusSaldo.classList.add('hidden');
     }
 }
 
 // ============================================================
-// 5. LOGIC FUNCTIONS
+// 6. LOGIC FUNCTIONS
 // ============================================================
 
-function loadDataAndRender(bulan, tahun) {
-    var data = loadData(bulan, tahun);
-    renderAll(bulan, tahun, data);
+// ===== 6a. LOAD DATA & RENDER =====
+async function loadDataAndRender(bulan, tahun) {
+    try {
+        var formKerja = document.getElementById('formKerja');
+        var currentMode = formKerja ? formKerja.dataset.mode : 'mode1';
+        
+        console.log('📥 Memuat data untuk mode:', currentMode);
+        
+        // Load dari API dengan mode
+        var apiData = await loadDataFromApi(bulan, tahun, currentMode);
+        
+        // Load dari LocalStorage dengan mode
+        var localData = loadLocalData(bulan, tahun, currentMode) || {};
+        
+        var mergedData = {
+            pengeluaranHarian: apiData?.pengeluaranHarian || [],
+            totalPengeluaran: apiData?.totalPengeluaran || 0,
+            biayaTetap: localData.biayaTetap || [],
+            anggaranAwal: currentMode === 'mode2' ? (localData.anggaranAwal || 0) : 0,
+            firstDate: apiData?.pengeluaranHarian?.length > 0 ? apiData.pengeluaranHarian[0].tanggal : null,
+            mode: currentMode
+        };
+        
+        renderAll(bulan, tahun, mergedData);
+        console.log('✅ Data dimuat untuk mode:', currentMode);
+    } catch (error) {
+        console.error('❌ Error loadDataAndRender:', error);
+        showToast('Gagal memuat data', 'danger');
+    }
 }
 
+// ===== 6b. TAMBAH BIAYA TETAP =====
 function tambahBiayaTetap() {
     var bulan = document.getElementById('selectBulan').value;
     var tahun = parseInt(document.getElementById('inputTahun').value);
-    
-    var data = loadData(bulan, tahun) || {};
-    if (!data.biayaTetap) data.biayaTetap = [];
-    
-    data.biayaTetap.push({ komponen: '', nominal: 0 });
-    
-    saveData(bulan, tahun, data);
-    renderBiayaTetap(data.biayaTetap);
-    renderRingkasan(data, bulan, tahun);
-    
     var formKerja = document.getElementById('formKerja');
-    if (formKerja && formKerja.dataset.mode === 'mode2') {
-        renderStatusSaldo(data, data.anggaranAwal || 0);
+    var currentMode = formKerja ? formKerja.dataset.mode : 'mode1';
+    
+    // Ambil data dari DOM
+    var existingRows = document.querySelectorAll('.dynamic-row');
+    var existingData = [];
+    
+    existingRows.forEach(function(row) {
+        var komponen = row.querySelector('.biaya-komponen').value.trim();
+        var nominalStr = row.querySelector('.biaya-nominal').value.trim();
+        var nominal = parseRupiah(nominalStr);
+        existingData.push({
+            komponen: komponen,
+            nominal: nominal
+        });
+    });
+    
+    var localData = loadLocalData(bulan, tahun, currentMode) || {};
+    if (!localData.biayaTetap) localData.biayaTetap = [];
+    
+    if (existingData.length > 0) {
+        localData.biayaTetap = existingData;
     }
     
-    showToast('Biaya tetap baru ditambahkan', 'success');
+    localData.biayaTetap.push({ komponen: '', nominal: 0 });
+    saveLocalData(bulan, tahun, currentMode, localData);
+    
+    renderBiayaTetap(localData.biayaTetap);
+    showToast('Baris biaya tetap ditambahkan', 'info');
 }
 
+// ===== 6c. HAPUS BIAYA TETAP =====
 function hapusBiayaTetap(index) {
     var bulan = document.getElementById('selectBulan').value;
     var tahun = parseInt(document.getElementById('inputTahun').value);
+    var formKerja = document.getElementById('formKerja');
+    var currentMode = formKerja ? formKerja.dataset.mode : 'mode1';
     
-    var data = loadData(bulan, tahun) || {};
-    if (!data.biayaTetap) data.biayaTetap = [];
+    var rows = document.querySelectorAll('.dynamic-row');
+    var currentData = [];
     
-    if (index >= 0 && index < data.biayaTetap.length) {
-        data.biayaTetap.splice(index, 1);
-        saveData(bulan, tahun, data);
-        renderBiayaTetap(data.biayaTetap);
-        renderRingkasan(data, bulan, tahun);
-        
-        var formKerja = document.getElementById('formKerja');
-        if (formKerja && formKerja.dataset.mode === 'mode2') {
-            renderStatusSaldo(data, data.anggaranAwal || 0);
-        }
-        
-        showToast('Biaya tetap dihapus', 'warning');
+    rows.forEach(function(row) {
+        var komponen = row.querySelector('.biaya-komponen').value.trim();
+        var nominalStr = row.querySelector('.biaya-nominal').value.trim();
+        var nominal = parseRupiah(nominalStr);
+        currentData.push({
+            komponen: komponen || '',
+            nominal: nominal || 0
+        });
+    });
+    
+    if (index >= 0 && index < currentData.length) {
+        currentData.splice(index, 1);
     }
+    
+    var data = loadLocalData(bulan, tahun, currentMode) || {};
+    data.biayaTetap = currentData;
+    saveLocalData(bulan, tahun, currentMode, data);
+    renderBiayaTetap(currentData);
+    showToast('Biaya tetap dihapus', 'warning');
 }
 
+// ===== 6d. SAVE BIAYA TETAP =====
 function saveBiayaTetap() {
     var bulan = document.getElementById('selectBulan').value;
     var tahun = parseInt(document.getElementById('inputTahun').value);
-    
-    var data = loadData(bulan, tahun) || {};
-    if (!data.biayaTetap) data.biayaTetap = [];
+    var formKerja = document.getElementById('formKerja');
+    var currentMode = formKerja ? formKerja.dataset.mode : 'mode1';
     
     var rows = document.querySelectorAll('.dynamic-row');
     var newBiayaTetap = [];
@@ -661,29 +765,21 @@ function saveBiayaTetap() {
         var komponen = row.querySelector('.biaya-komponen').value.trim();
         var nominalStr = row.querySelector('.biaya-nominal').value.trim();
         var nominal = parseRupiah(nominalStr);
-        
-        if (komponen || nominal > 0) {
-            newBiayaTetap.push({
-                komponen: komponen || 'Biaya',
-                nominal: nominal
-            });
-        }
+        newBiayaTetap.push({
+            komponen: komponen || '',
+            nominal: nominal || 0
+        });
     });
     
+    var data = loadLocalData(bulan, tahun, currentMode) || {};
     data.biayaTetap = newBiayaTetap;
-    saveData(bulan, tahun, data);
-    renderBiayaTetap(data.biayaTetap);
-    renderRingkasan(data, bulan, tahun);
-    
-    var formKerja = document.getElementById('formKerja');
-    if (formKerja && formKerja.dataset.mode === 'mode2') {
-        renderStatusSaldo(data, data.anggaranAwal || 0);
-    }
-    
+    saveLocalData(bulan, tahun, currentMode, data);
+    renderBiayaTetap(newBiayaTetap);
     showToast('Biaya tetap disimpan', 'success');
 }
 
-function tambahPengeluaran() {
+// ===== 6e. TAMBAH PENGELUARAN =====
+async function tambahPengeluaran() {
     var bulan = document.getElementById('selectBulan').value;
     var tahun = parseInt(document.getElementById('inputTahun').value);
     
@@ -702,73 +798,62 @@ function tambahPengeluaran() {
         return;
     }
     
-    var data = loadData(bulan, tahun) || {};
-    if (!data.pengeluaranHarian) data.pengeluaranHarian = [];
-    if (!data.firstDate) data.firstDate = tanggal;
+    // AMBIL MODE SAAT INI
+    var formKerja = document.getElementById('formKerja');
+    var currentMode = formKerja ? formKerja.dataset.mode : 'mode1';
     
-    data.pengeluaranHarian.push({
-        id: generateId(),
+    console.log('🔍 Menambah pengeluaran dengan mode:', currentMode);
+    
+    var result = await tambahPengeluaranKeAPI({
+        bulan: bulan,
+        tahun: tahun,
         tanggal: tanggal,
         kategori: kategori,
         deskripsi: deskripsi || '-',
-        nominal: nominal
+        nominal: nominal,
+        mode: currentMode
     });
     
-    saveData(bulan, tahun, data);
-    renderTabel(data.pengeluaranHarian);
-    renderRingkasan(data, bulan, tahun);
-    
-    var formKerja = document.getElementById('formKerja');
-    if (formKerja && formKerja.dataset.mode === 'mode2') {
-        renderStatusSaldo(data, data.anggaranAwal || 0);
+    if (result.success) {
+        document.getElementById('inputNominal').value = '';
+        document.getElementById('inputDeskripsi').value = '';
+        document.getElementById('inputTanggal').value = getToday();
+        
+        await loadDataAndRender(bulan, tahun);
+        showToast('Pengeluaran berhasil ditambahkan! 💰', 'success');
+    } else {
+        showToast(result.message || 'Gagal menambahkan data', 'danger');
     }
-    
-    var inputNominal = document.getElementById('inputNominal');
-    var inputDeskripsi = document.getElementById('inputDeskripsi');
-    var inputTanggal = document.getElementById('inputTanggal');
-    if (inputNominal) inputNominal.value = '';
-    if (inputDeskripsi) inputDeskripsi.value = '';
-    if (inputTanggal) inputTanggal.value = getToday();
-    
-    showToast('Pengeluaran berhasil ditambahkan! 💰', 'success');
 }
 
-function hapusPengeluaran(id) {
+// ===== 6f. HAPUS PENGELUARAN =====
+async function hapusPengeluaran(id) {
     if (!confirm('Yakin ingin menghapus data ini?')) return;
     
     var bulan = document.getElementById('selectBulan').value;
     var tahun = parseInt(document.getElementById('inputTahun').value);
     
-    var data = loadData(bulan, tahun) || {};
-    if (!data.pengeluaranHarian) data.pengeluaranHarian = [];
+    var result = await hapusPengeluaranDariAPI(id);
     
-    data.pengeluaranHarian = data.pengeluaranHarian.filter(function(item) {
-        return item.id !== id;
-    });
-    
-    if (data.pengeluaranHarian.length > 0) {
-        var dates = data.pengeluaranHarian.map(function(item) { return item.tanggal; });
-        dates.sort();
-        data.firstDate = dates[0];
+    if (result.success) {
+        await loadDataAndRender(bulan, tahun);
+        showToast('Data pengeluaran dihapus', 'warning');
     } else {
-        data.firstDate = null;
+        showToast(result.message || 'Gagal menghapus data', 'danger');
     }
-    
-    saveData(bulan, tahun, data);
-    renderTabel(data.pengeluaranHarian);
-    renderRingkasan(data, bulan, tahun);
-    
-    var formKerja = document.getElementById('formKerja');
-    if (formKerja && formKerja.dataset.mode === 'mode2') {
-        renderStatusSaldo(data, data.anggaranAwal || 0);
-    }
-    
-    showToast('Data pengeluaran dihapus', 'warning');
 }
 
+// ===== 6g. SAVE ANGGARAN AWAL =====
 function saveAnggaranAwal() {
     var bulan = document.getElementById('selectBulan').value;
     var tahun = parseInt(document.getElementById('inputTahun').value);
+    var formKerja = document.getElementById('formKerja');
+    var currentMode = formKerja ? formKerja.dataset.mode : 'mode1';
+    
+    if (currentMode !== 'mode2') {
+        showToast('Fitur anggaran hanya tersedia di Mode 2', 'warning');
+        return;
+    }
     
     var nominalStr = document.getElementById('inputAnggaranAwal').value.trim();
     var nominal = parseRupiah(nominalStr);
@@ -778,16 +863,16 @@ function saveAnggaranAwal() {
         return;
     }
     
-    var data = loadData(bulan, tahun) || {};
+    var data = loadLocalData(bulan, tahun, currentMode) || {};
     data.anggaranAwal = nominal;
+    saveLocalData(bulan, tahun, currentMode, data);
     
-    saveData(bulan, tahun, data);
-    renderStatusSaldo(data, nominal);
+    loadDataAndRender(bulan, tahun);
     showToast('Anggaran awal disimpan! 💰', 'success');
 }
 
 // ============================================================
-// 6. EVENT LISTENERS (Keuangan)
+// 7. EVENT LISTENERS
 // ============================================================
 
 // ===== Menu Utama =====
@@ -882,7 +967,7 @@ document.addEventListener('blur', function(e) {
 }, true);
 
 // ============================================================
-// 7. INITIALIZATION
+// 8. INITIALIZATION
 // ============================================================
 
 function init() {
@@ -901,7 +986,7 @@ function init() {
     renderMenuUtama();
     
     console.log('🚀 MahaMate - Program Keuangan siap digunakan!');
-    console.log('📌 Data tersimpan di LocalStorage browser Anda.');
+    console.log('📡 API:', API_URL);
 }
 
 document.addEventListener('DOMContentLoaded', init);
