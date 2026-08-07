@@ -5,7 +5,7 @@
 console.log('🔧 Inisialisasi Program Tugas...');
 
 // ============================================================
-// 1. KONFIGURASI
+// 1. KONFIGURASI API
 // ============================================================
 
 const API_URL = 'http://localhost:3000/api/tugas';
@@ -238,7 +238,8 @@ console.log('✅ Sidebar & Navbar siap!');
 
 function formatTanggal(dateStr) {
     if (!dateStr) return '-';
-    var parts = dateStr.split('-');
+    var datePart = dateStr.split('T')[0];
+    var parts = datePart.split('-');
     return parts[2] + '/' + parts[1] + '/' + parts[0];
 }
 
@@ -248,10 +249,6 @@ function getToday() {
     var month = String(today.getMonth() + 1).padStart(2, '0');
     var day = String(today.getDate()).padStart(2, '0');
     return year + '-' + month + '-' + day;
-}
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
 function isDeadlineOverdue(deadline) {
@@ -312,27 +309,24 @@ function getStatusColor(status) {
 }
 
 // ============================================================
-// 4. DATA FUNCTIONS
+// 4. DATA FUNCTIONS (API)
 // ============================================================
 
-// ===== 4a. STORAGE KEY =====
-var STORAGE_KEY = 'tugas_data';
-
-// ===== 4b. LOAD DATA =====
-function loadData() {
-    var data = localStorage.getItem(STORAGE_KEY);
-    if (!data) return { tugas: [] };
+// ===== 4a. LOAD DATA DARI API =====
+async function loadData() {
     try {
-        return JSON.parse(data);
-    } catch (e) {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        
+        if (result.success) {
+            return { tugas: result.data };
+        }
+        return { tugas: [] };
+    } catch (error) {
+        console.error('❌ Error load data:', error);
+        showToast('Gagal memuat data dari server', 'danger');
         return { tugas: [] };
     }
-}
-
-// ===== 4c. SAVE DATA =====
-function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    console.log('💾 Data tugas disimpan');
 }
 
 // ============================================================
@@ -429,8 +423,8 @@ function renderTabel(data, filterKategori, filterPrioritas, filterStatus, sortBy
     });
 }
 
-function renderAll() {
-    var data = loadData();
+async function renderAll() {
+    const data = await loadData();
     var filterKategori = document.getElementById('filterKategori').value;
     var filterPrioritas = document.getElementById('filterPrioritas').value;
     var filterStatus = document.getElementById('filterStatus').value;
@@ -444,38 +438,43 @@ function renderAll() {
 // 6. PREVIEW POPUP
 // ============================================================
 
-function openPreview(id) {
-    var data = loadData();
-    var tugas = data.tugas.find(function(t) { return t.id === id; });
-    
-    if (!tugas) {
-        showToast('Tugas tidak ditemukan', 'danger');
-        return;
+async function openPreview(id) {
+    try {
+        const data = await loadData();
+        var tugas = data.tugas.find(function(t) { return t.id == id; });
+        
+        if (!tugas) {
+            showToast('Tugas tidak ditemukan', 'danger');
+            return;
+        }
+        
+        // Isi data preview
+        document.getElementById('previewJudul').textContent = tugas.judul || '-';
+        document.getElementById('previewDeskripsi').textContent = tugas.deskripsi || '-';
+        document.getElementById('previewKategori').textContent = tugas.kategori || '-';
+        document.getElementById('previewPrioritas').textContent = tugas.prioritas || '-';
+        document.getElementById('previewDeadline').textContent = formatTanggal(tugas.deadline);
+        document.getElementById('previewStatus').textContent = tugas.status || 'Belum Mulai';
+        document.getElementById('previewStatus').style.color = getStatusColor(tugas.status);
+        document.getElementById('previewCreated').textContent = tugas.createdAt ? formatTanggal(tugas.createdAt.split('T')[0]) : '-';
+        
+        // Tombol "Selesai" hanya jika belum selesai
+        var btnSelesai = document.getElementById('btnPreviewSelesai');
+        if (tugas.status === 'Selesai') {
+            btnSelesai.style.display = 'none';
+        } else {
+            btnSelesai.style.display = 'inline-flex';
+            btnSelesai.dataset.id = tugas.id;
+        }
+        
+        document.getElementById('btnPreviewHapus').dataset.id = tugas.id;
+        
+        document.getElementById('previewOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } catch (error) {
+        console.error('❌ Error open preview:', error);
+        showToast('Gagal membuka detail tugas', 'danger');
     }
-    
-    // Isi data preview
-    document.getElementById('previewJudul').textContent = tugas.judul || '-';
-    document.getElementById('previewDeskripsi').textContent = tugas.deskripsi || '-';
-    document.getElementById('previewKategori').textContent = tugas.kategori || '-';
-    document.getElementById('previewPrioritas').textContent = tugas.prioritas || '-';
-    document.getElementById('previewDeadline').textContent = formatTanggal(tugas.deadline);
-    document.getElementById('previewStatus').textContent = tugas.status || 'Belum Mulai';
-    document.getElementById('previewStatus').style.color = getStatusColor(tugas.status);
-    document.getElementById('previewCreated').textContent = tugas.createdAt ? formatTanggal(tugas.createdAt.split('T')[0]) : '-';
-    
-    // Tombol "Selesai" hanya jika belum selesai
-    var btnSelesai = document.getElementById('btnPreviewSelesai');
-    if (tugas.status === 'Selesai') {
-        btnSelesai.style.display = 'none';
-    } else {
-        btnSelesai.style.display = 'inline-flex';
-        btnSelesai.dataset.id = tugas.id;
-    }
-    
-    document.getElementById('btnPreviewHapus').dataset.id = tugas.id;
-    
-    document.getElementById('previewOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
 }
 
 function closePreview() {
@@ -484,10 +483,11 @@ function closePreview() {
 }
 
 // ============================================================
-// 7. LOGIC FUNCTIONS
+// 7. LOGIC FUNCTIONS (CRUD - API)
 // ============================================================
 
-function tambahTugas() {
+// ===== TAMBAH TUGAS =====
+async function tambahTugas() {
     var judul = document.getElementById('inputJudul').value.trim();
     var deskripsi = document.getElementById('inputDeskripsi').value.trim();
     var kategori = document.getElementById('inputKategori').value;
@@ -499,55 +499,84 @@ function tambahTugas() {
         return;
     }
     
-    var data = loadData();
-    if (!data.tugas) data.tugas = [];
-    
-    data.tugas.push({
-        id: generateId(),
-        judul: judul,
-        deskripsi: deskripsi || '-',
-        kategori: kategori,
-        prioritas: prioritas,
-        deadline: deadline || null,
-        status: 'Belum Mulai',
-        createdAt: new Date().toISOString()
-    });
-    
-    saveData(data);
-    renderAll();
-    
-    document.getElementById('inputJudul').value = '';
-    document.getElementById('inputDeskripsi').value = '';
-    document.getElementById('inputDeadline').value = getToday();
-    
-    showToast('✅ Tugas berhasil ditambahkan!', 'success');
-}
-
-function tandaiSelesai(id) {
-    var data = loadData();
-    if (!data.tugas) return;
-    
-    var tugas = data.tugas.find(function(t) { return t.id === id; });
-    if (tugas) {
-        tugas.status = 'Selesai';
-        saveData(data);
-        renderAll();
-        closePreview();
-        showToast('✅ Tugas ditandai selesai!', 'success');
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                judul,
+                deskripsi: deskripsi || '-',
+                kategori,
+                prioritas,
+                deadline: deadline || null,
+                status: 'Belum Mulai'
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            document.getElementById('inputJudul').value = '';
+            document.getElementById('inputDeskripsi').value = '';
+            document.getElementById('inputDeadline').value = getToday();
+            
+            await renderAll();
+            showToast('✅ Tugas berhasil ditambahkan!', 'success');
+        } else {
+            showToast(result.message || 'Gagal menambahkan tugas', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Error tambah tugas:', error);
+        showToast('Gagal menambahkan tugas', 'danger');
     }
 }
 
-function hapusTugas(id) {
+// ===== TANDAI SELESAI =====
+async function tandaiSelesai(id) {
+    try {
+        const response = await fetch(`${API_URL}/${id}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'Selesai' })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            await renderAll();
+            closePreview();
+            showToast('✅ Tugas ditandai selesai!', 'success');
+        } else {
+            showToast(result.message || 'Gagal update status', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Error tandai selesai:', error);
+        showToast('Gagal update status', 'danger');
+    }
+}
+
+// ===== HAPUS TUGAS =====
+async function hapusTugas(id) {
     if (!confirm('Yakin ingin menghapus tugas ini?')) return;
     
-    var data = loadData();
-    if (!data.tugas) return;
-    
-    data.tugas = data.tugas.filter(function(t) { return t.id !== id; });
-    saveData(data);
-    renderAll();
-    closePreview();
-    showToast('🗑 Tugas dihapus', 'warning');
+    try {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            await renderAll();
+            closePreview();
+            showToast('🗑 Tugas dihapus', 'warning');
+        } else {
+            showToast(result.message || 'Gagal menghapus tugas', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Error hapus tugas:', error);
+        showToast('Gagal menghapus tugas', 'danger');
+    }
 }
 
 // ============================================================
@@ -608,13 +637,14 @@ document.addEventListener('keydown', function(e) {
 // 9. INITIALIZATION
 // ============================================================
 
-function init() {
+async function init() {
     document.getElementById('inputDeadline').value = getToday();
     
     // LANGSUNG RENDER TANPA MENU
-    renderAll();
+    await renderAll();
     
     console.log('🚀 MahaMate - Program Tugas siap digunakan!');
+    console.log('📡 API:', API_URL);
 }
 
 document.addEventListener('DOMContentLoaded', init);

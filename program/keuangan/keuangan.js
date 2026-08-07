@@ -250,7 +250,8 @@ function parseRupiah(str) {
 
 function formatTanggal(dateStr) {
     if (!dateStr) return '-';
-    var parts = dateStr.split('-');
+    var datePart = dateStr.split('T')[0];
+    var parts = datePart.split('-');
     return parts[2] + '/' + parts[1] + '/' + parts[0];
 }
 

@@ -5,7 +5,7 @@
 console.log('🔧 Inisialisasi Program Kegiatan...');
 
 // ============================================================
-// 1. KONFIGURASI
+// 1. KONFIGURASI API
 // ============================================================
 
 const API_URL = 'http://localhost:3000/api/kegiatan';
@@ -238,7 +238,8 @@ console.log('✅ Sidebar & Navbar siap!');
 
 function formatTanggal(dateStr) {
     if (!dateStr) return '-';
-    var parts = dateStr.split('-');
+    var datePart = dateStr.split('T')[0];
+    var parts = datePart.split('-');
     return parts[2] + '/' + parts[1] + '/' + parts[0];
 }
 
@@ -248,10 +249,6 @@ function getToday() {
     var month = String(today.getMonth() + 1).padStart(2, '0');
     var day = String(today.getDate()).padStart(2, '0');
     return year + '-' + month + '-' + day;
-}
-
-function generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
 
 function showToast(message, type) {
@@ -313,27 +310,37 @@ function getNextStatus(status) {
 }
 
 // ============================================================
-// 4. DATA FUNCTIONS
+// 4. DATA FUNCTIONS (API)
 // ============================================================
 
-// ===== 4a. STORAGE KEY =====
-var STORAGE_KEY = 'kegiatan_data';
-
-// ===== 4b. LOAD DATA =====
-function loadData() {
-    var data = localStorage.getItem(STORAGE_KEY);
-    if (!data) return { kegiatan: [] };
+// ===== 4a. LOAD DATA DARI API =====
+async function loadData() {
     try {
-        return JSON.parse(data);
-    } catch (e) {
+        const response = await fetch(API_URL);
+        const result = await response.json();
+        
+        if (result.success) {
+            // Konversi dari snake_case ke camelCase
+            const kegiatan = result.data.map(function(item) {
+                return {
+                    id: item.id,
+                    nama: item.nama,
+                    deskripsi: item.deskripsi,
+                    lokasi: item.lokasi,
+                    tanggalMulai: item.tanggal_mulai,
+                    tanggalSelesai: item.tanggal_selesai,
+                    status: item.status,
+                    createdAt: item.created_at
+                };
+            });
+            return { kegiatan: kegiatan };
+        }
+        return { kegiatan: [] };
+    } catch (error) {
+        console.error('❌ Error load data:', error);
+        showToast('Gagal memuat data dari server', 'danger');
         return { kegiatan: [] };
     }
-}
-
-// ===== 4c. SAVE DATA =====
-function saveData(data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    console.log('💾 Data kegiatan disimpan');
 }
 
 // ============================================================
@@ -356,8 +363,7 @@ function renderStats(data) {
     document.getElementById('statRencana').textContent = rencana;
 }
 
-function updateLokasiFilter() {
-    var data = loadData();
+function updateLokasiFilter(data) {
     var select = document.getElementById('filterLokasi');
     var lokasiSet = {};
     
@@ -427,44 +433,49 @@ function renderTabel(data, filterStatus, filterLokasi) {
     });
 }
 
-function renderAll() {
-    var data = loadData();
+async function renderAll() {
+    var data = await loadData();
     var filterStatus = document.getElementById('filterStatus').value;
     var filterLokasi = document.getElementById('filterLokasi').value;
     
     renderStats(data);
     renderTabel(data, filterStatus, filterLokasi);
-    updateLokasiFilter();
+    updateLokasiFilter(data);
 }
 
 // ============================================================
 // 6. PREVIEW POPUP
 // ============================================================
 
-function openPreview(id) {
-    var data = loadData();
-    var kegiatan = data.kegiatan.find(function(k) { return k.id === id; });
-    
-    if (!kegiatan) {
-        showToast('Kegiatan tidak ditemukan', 'danger');
-        return;
+async function openPreview(id) {
+    try {
+        var data = await loadData();
+        var kegiatan = data.kegiatan.find(function(k) { return k.id == id; });
+        
+        if (!kegiatan) {
+            showToast('Kegiatan tidak ditemukan', 'danger');
+            return;
+        }
+        
+        // Isi data preview
+        document.getElementById('previewNama').textContent = kegiatan.nama || '-';
+        document.getElementById('previewDeskripsi').textContent = kegiatan.deskripsi || '-';
+        document.getElementById('previewLokasi').textContent = kegiatan.lokasi || '-';
+        document.getElementById('previewMulai').textContent = formatTanggal(kegiatan.tanggalMulai);
+        document.getElementById('previewSelesai').textContent = kegiatan.tanggalSelesai ? formatTanggal(kegiatan.tanggalSelesai) : '-';
+        document.getElementById('previewStatus').textContent = kegiatan.status || 'Rencana';
+        document.getElementById('previewStatus').style.color = getStatusColor(kegiatan.status);
+        document.getElementById('previewCreated').textContent = kegiatan.createdAt ? formatTanggal(kegiatan.createdAt.split('T')[0]) : '-';
+        
+        document.getElementById('btnPreviewStatus').dataset.id = kegiatan.id;
+        document.getElementById('btnPreviewHapus').dataset.id = kegiatan.id;
+        
+        document.getElementById('previewOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } catch (error) {
+        console.error('❌ Error open preview:', error);
+        showToast('Gagal membuka detail kegiatan', 'danger');
     }
-    
-    // Isi data preview
-    document.getElementById('previewNama').textContent = kegiatan.nama || '-';
-    document.getElementById('previewDeskripsi').textContent = kegiatan.deskripsi || '-';
-    document.getElementById('previewLokasi').textContent = kegiatan.lokasi || '-';
-    document.getElementById('previewMulai').textContent = formatTanggal(kegiatan.tanggalMulai);
-    document.getElementById('previewSelesai').textContent = kegiatan.tanggalSelesai ? formatTanggal(kegiatan.tanggalSelesai) : '-';
-    document.getElementById('previewStatus').textContent = kegiatan.status || 'Rencana';
-    document.getElementById('previewStatus').style.color = getStatusColor(kegiatan.status);
-    document.getElementById('previewCreated').textContent = kegiatan.createdAt ? formatTanggal(kegiatan.createdAt.split('T')[0]) : '-';
-    
-    document.getElementById('btnPreviewStatus').dataset.id = kegiatan.id;
-    document.getElementById('btnPreviewHapus').dataset.id = kegiatan.id;
-    
-    document.getElementById('previewOverlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
 }
 
 function closePreview() {
@@ -473,10 +484,11 @@ function closePreview() {
 }
 
 // ============================================================
-// 7. LOGIC FUNCTIONS
+// 7. LOGIC FUNCTIONS (CRUD - API)
 // ============================================================
 
-function tambahKegiatan() {
+// ===== TAMBAH KEGIATAN =====
+async function tambahKegiatan() {
     var nama = document.getElementById('inputNama').value.trim();
     var lokasi = document.getElementById('inputLokasi').value.trim();
     var deskripsi = document.getElementById('inputDeskripsi').value.trim();
@@ -493,71 +505,103 @@ function tambahKegiatan() {
         return;
     }
     
-    // Tentukan status otomatis
-    var today = getToday();
-    var status = 'Rencana';
-    
-    if (tanggalMulai <= today && (!tanggalSelesai || tanggalSelesai >= today)) {
-        status = 'Berlangsung';
-    } else if (tanggalSelesai && tanggalSelesai < today) {
-        status = 'Selesai';
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nama: nama,
+                lokasi: lokasi || '-',
+                deskripsi: deskripsi || '-',
+                tanggalMulai: tanggalMulai,
+                tanggalSelesai: tanggalSelesai || null,
+                status: 'Rencana'
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            document.getElementById('inputNama').value = '';
+            document.getElementById('inputLokasi').value = '';
+            document.getElementById('inputDeskripsi').value = '';
+            document.getElementById('inputMulai').value = getToday();
+            document.getElementById('inputSelesai').value = getToday();
+            
+            await renderAll();
+            showToast('✅ Kegiatan berhasil ditambahkan!', 'success');
+        } else {
+            showToast(result.message || 'Gagal menambahkan kegiatan', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Error tambah kegiatan:', error);
+        showToast('Gagal menambahkan kegiatan', 'danger');
     }
-    
-    var data = loadData();
-    if (!data.kegiatan) data.kegiatan = [];
-    
-    data.kegiatan.push({
-        id: generateId(),
-        nama: nama,
-        lokasi: lokasi || '-',
-        deskripsi: deskripsi || '-',
-        tanggalMulai: tanggalMulai,
-        tanggalSelesai: tanggalSelesai || null,
-        status: status,
-        createdAt: new Date().toISOString()
-    });
-    
-    saveData(data);
-    renderAll();
-    updateLokasiFilter();
-    
-    document.getElementById('inputNama').value = '';
-    document.getElementById('inputLokasi').value = '';
-    document.getElementById('inputDeskripsi').value = '';
-    document.getElementById('inputMulai').value = getToday();
-    document.getElementById('inputSelesai').value = getToday();
-    
-    showToast('✅ Kegiatan berhasil ditambahkan!', 'success');
 }
 
-function ubahStatusKegiatan(id) {
-    var data = loadData();
-    if (!data.kegiatan) return;
-    
-    var kegiatan = data.kegiatan.find(function(k) { return k.id === id; });
-    if (!kegiatan) return;
-    
-    var newStatus = getNextStatus(kegiatan.status);
-    kegiatan.status = newStatus;
-    
-    saveData(data);
-    renderAll();
-    closePreview();
-    showToast('🔄 Status diubah menjadi: ' + newStatus, 'info');
+// ===== UBAH STATUS KEGIATAN =====
+async function ubahStatusKegiatan(id) {
+    try {
+        var data = await loadData();
+        var kegiatan = data.kegiatan.find(function(k) { return k.id == id; });
+        
+        if (!kegiatan) {
+            showToast('Kegiatan tidak ditemukan', 'danger');
+            return;
+        }
+        
+        var newStatus = getNextStatus(kegiatan.status);
+        
+        const response = await fetch(API_URL + '/' + id, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                nama: kegiatan.nama,
+                lokasi: kegiatan.lokasi,
+                deskripsi: kegiatan.deskripsi,
+                tanggalMulai: kegiatan.tanggalMulai,
+                tanggalSelesai: kegiatan.tanggalSelesai,
+                status: newStatus
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            await renderAll();
+            closePreview();
+            showToast('🔄 Status diubah menjadi: ' + newStatus, 'info');
+        } else {
+            showToast(result.message || 'Gagal update status', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Error ubah status:', error);
+        showToast('Gagal update status', 'danger');
+    }
 }
 
-function hapusKegiatan(id) {
+// ===== HAPUS KEGIATAN =====
+async function hapusKegiatan(id) {
     if (!confirm('Yakin ingin menghapus kegiatan ini?')) return;
     
-    var data = loadData();
-    if (!data.kegiatan) return;
-    
-    data.kegiatan = data.kegiatan.filter(function(k) { return k.id !== id; });
-    saveData(data);
-    renderAll();
-    updateLokasiFilter();
-    closePreview();
-    showToast('🗑 Kegiatan dihapus', 'warning');
+    try {
+        const response = await fetch(API_URL + '/' + id, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            await renderAll();
+            closePreview();
+            showToast('🗑 Kegiatan dihapus', 'warning');
+        } else {
+            showToast(result.message || 'Gagal menghapus kegiatan', 'danger');
+        }
+    } catch (error) {
+        console.error('❌ Error hapus kegiatan:', error);
+        showToast('Gagal menghapus kegiatan', 'danger');
+    }
 }
 
 // ============================================================
@@ -616,14 +660,15 @@ document.addEventListener('keydown', function(e) {
 // 9. INITIALIZATION
 // ============================================================
 
-function init() {
+async function init() {
     document.getElementById('inputMulai').value = getToday();
     document.getElementById('inputSelesai').value = getToday();
     
     // LANGSUNG RENDER TANPA MENU
-    renderAll();
+    await renderAll();
     
     console.log('🚀 MahaMate - Program Kegiatan siap digunakan!');
+    console.log('📡 API:', API_URL);
 }
 
 document.addEventListener('DOMContentLoaded', init);
