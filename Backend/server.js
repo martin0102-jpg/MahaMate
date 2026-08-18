@@ -1,15 +1,16 @@
 // ============================================================
 // SERVER UTAMA - MAHAMATE BACKEND
 // ============================================================
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const { testConnection } = require('./config/database');
 
 // ===== IMPORT ROUTES =====
-const tugasRoutes = require('./routes/tugas');
-const keuanganRoutes = require('./routes/keuangan');
-const kegiatanRoutes = require('./routes/kegiatan');
+const tugasRoutes = require('./routes/routestugas');
+const keuanganRoutes = require('./routes/routesKeuangan');
+const kegiatanRoutes = require('./routes/routesKegiatan');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
