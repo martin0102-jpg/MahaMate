@@ -554,17 +554,10 @@ async function ubahStatusKegiatan(id) {
         
         var newStatus = getNextStatus(kegiatan.status);
         
-        const response = await fetch(API_URL + '/' + id, {
-            method: 'PUT',
+        const response = await fetch(API_URL + '/' + id + '/status', {
+            method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                nama: kegiatan.nama,
-                lokasi: kegiatan.lokasi,
-                deskripsi: kegiatan.deskripsi,
-                tanggalMulai: kegiatan.tanggalMulai,
-                tanggalSelesai: kegiatan.tanggalSelesai,
-                status: newStatus
-            })
+            body: JSON.stringify({ status: newStatus })
         });
         
         const result = await response.json();
