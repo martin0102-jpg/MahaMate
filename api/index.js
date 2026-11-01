@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { testConnection } = require('./config/database');
 
 // ===== IMPORT ROUTES =====
@@ -26,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 // ===== ROOT ENDPOINT =====
-app.get(['/', '/api'], (req, res) => {
+app.get('/api', (req, res) => {
     res.json({
         name: 'MahaMate API',
         version: '1.0.0',
@@ -37,6 +38,15 @@ app.get(['/', '/api'], (req, res) => {
             kegiatan: '/api/kegiatan'
         }
     });
+});
+
+// ===== FRONTEND (file statis) =====
+const ROOT = path.join(__dirname, '..');
+['dashboard', 'program', 'assets'].forEach((dir) => {
+    app.use('/' + dir, express.static(path.join(ROOT, dir)));
+});
+app.get('/', (req, res) => {
+    res.sendFile(path.join(ROOT, 'index.html'));
 });
 
 // ===== ROUTES =====
